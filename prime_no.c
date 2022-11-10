@@ -12,7 +12,7 @@ void main(){
             if(num % i == 0){
                 fact_count++;
             }
-        }//eo for
+        }
 
         // checking if prime
         if(fact_count == 1){
@@ -23,6 +23,5 @@ void main(){
         num ++;
         
         
-    }//eo while
-
-}//eo main
+    }
+}
