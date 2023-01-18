@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include <limits.h>
 typedef struct node{
     int data;
     struct node * next;
@@ -19,20 +18,22 @@ void display(List L){
     printf(" ]\n");
 
 }
-
-int pop(List *L){
-    node *p;
+void delete(List *L, int key){
+    node *p, *q;
     p = *L;
+    //q = p->next;
     if(*L == 0)
-        return INT_MIN;
-
-    int ele = p -> data;
-    *L = (*L) ->next;
-    free(p);
-    return ele;
-
+        return;
+    while(p != 0){
+        if(p -> next -> data == key){
+            q = p ->next;
+            p->next = q -> next;
+            free(q);
+            return;
+        }
+        p = p ->next;
+    }
 }
-
 void main(){
     List L1, L2; //created 2 pointers of to node 
     L1 = (node *)malloc(sizeof(node *));
@@ -43,10 +44,9 @@ void main(){
     L1 -> data = 1;
     L1 -> next = L2;
     
-    printf("Linked List: ");
     display(L1);
 
-    printf("After pop: ");
-    pop(&L1);
+    delete(&L1, 2);
     display(L1);
+   
 }

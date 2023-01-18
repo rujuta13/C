@@ -30,6 +30,13 @@ void append(List *L, int key){
 
     node * pn;
     pn = *L; // pn points to start of LL
+
+    //LL empty
+    if(pn == NULL){
+        *L = nn;
+        return;
+    }
+
     while((pn -> next) != 0)
         pn = pn -> next;
     //traverse till last node
