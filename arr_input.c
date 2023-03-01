@@ -5,5 +5,5 @@ void main(){
         printf("Enter a no.:");
         scanf("%d", &A[i]);
     }
-    printf("%d",sizeof(A)/sizeof(int));
+    printf("Size of array: %d",sizeof(A)/sizeof(int));
 }
