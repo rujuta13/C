@@ -1,64 +1,67 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct queue{
+typedef struct node{
     int data;
-    struct queue * next;
-} queue;
+    struct node * next;
+} node;
 
-//queue * front = NULL; 
-//queue * rear = NULL;
+typedef struct queue {
+    node *front, *rear;
+}queue;
 
-queue * front, * rear;
+void init_queue(queue *q){
+    q->front = NULL;
+    q->rear = NULL;
+}
 
-void display(){
-    queue *pn = front;
+void display(queue q){
     printf("[");
-    while(pn != NULL){
-        printf(" %d ", pn -> data);
-        pn = pn -> next;
+    while(q.front != NULL){
+        printf(" %d", q.front-> data);
+        q.front = q.front -> next;
     }
-    printf("]\n");
+    printf(" ]\n");
 
 }
 
-void enqueue(int key){
-    queue * new = (queue *) malloc(sizeof(queue));
-    new -> data = key;
-    new -> next = NULL;
+void enqueue(queue *q, int key){
+    node *nn;
+    nn = (node *)malloc(sizeof(node *));
+    if(nn == 0)
+        return;
 
-    if(front == NULL && rear == NULL){
-		front = rear = new;
-		return;
-	}
-    rear->next = new; // node attached
-    rear = new; // rear appeneded
+    nn -> data = key;
+    nn -> next = NULL;
 
+    if(q->front == NULL){
+        q->rear = nn;
+        q->front = nn;
+        return;
+    }
+    q->rear->next = nn;
+    q->rear = nn;
 }
 
-void dequeue(){
-    queue *temp = front;
-    if(front == NULL){
-		printf("Queue is Empty\n");
-		return;
-	}
+void dequeue(queue *q){
+    if(q->front == NULL)
+        return;
 
-    else {
-		front = front->next;
-	}
-	free(temp);
+    node *temp = q-> front;
+    q->front = q->front->next;
+    free(temp);
 }
 void main(){
-    front = NULL;
-    rear = NULL;
-    enqueue(1);
-    display();
-
-    enqueue(2);
-    display();
-
-    dequeue();
-    display();
-    
-    enqueue(3);
-    display();
+    queue q;
+    init_queue(&q);
+    display(q);
+    enqueue(&q, 1);
+    enqueue(&q, 2);
+    enqueue(&q, 3);
+    display(q);
+    dequeue(&q);
+    display(q);
+    dequeue(&q);
+    display(q);
+    dequeue(&q);
+    display(q);
 }
