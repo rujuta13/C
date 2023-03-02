@@ -5,9 +5,9 @@ typedef struct node{
     struct node * next;
 } node;
 
-typedef node * List;
 
-void display(List L){
+
+void display(node *L){
     node * pn;
     pn = L;
     printf("[");
@@ -18,7 +18,7 @@ void display(List L){
     printf(" ]\n");
 
 }
-void append(List *L, int key){
+void append(node **L, int key){
     node * nn;
     nn = (node *)malloc(sizeof(node *));
     if(!nn) //if nn is NULL then return
@@ -45,7 +45,7 @@ void append(List *L, int key){
 }
 
 void main(){
-    List L1, L2; //created 2 pointers of to node 
+    node *L1, *L2; //created 2 pointers of to node 
     //display(L1);
     L1 = (node *)malloc(sizeof(node *));
     L2 = (node *)malloc(sizeof(node *));
