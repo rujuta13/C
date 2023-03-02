@@ -49,26 +49,29 @@ void main(){
 	
 	char *A;
 	printf("bc\n");
-	scanf("\n %s", A);
+	//scanf("\n %s", A);
+	A = "123+456";
 	int s = strlen(A);
+	//printf("Size %d\n", strlen(A));
 
 	//first number
+	
+	
 	int i = 0;
-
-	while(i < s){ // && isdigit(*(A+i) - '0') != 0){
-		printf("%c\n", *(A+i));
-		//insert(&n1, A[i] - '0');
+	while(i < s && isdigit(A[i]) != 0) { //A[i] - '0' >= 0 && A[i] - '0' <= 9){
+		//printf("%c\n", A[i]);
+		insert(&n1, A[i] - '0');
 		i++;
 	}
-
 	display(n1);
-	
-	/*
-	
+
 	i += 1; //skip '+' symbol
+	
 	//second number
-	for(; i < s; i ++)
-		insert(&n2, atoi(A[i]));
+	for(; i < s; i ++){
+		//printf("%c\n", A[i]);
+		insert(&n2, A[i] - '0');
+	}
 	display(n2);
-	*/
+	
 }
