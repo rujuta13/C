@@ -6,6 +6,14 @@ typedef struct stack{
     struct stack * next;
 } stack;
 
+void init(stack **head){
+	*head = (stack *) malloc(sizeof(stack *));
+	if(*head == NULL)
+		return;
+
+	*head = NULL;
+}
+
 void display(stack *s){
     stack * p;
     p = s;
@@ -17,11 +25,12 @@ void display(stack *s){
     printf(" ]\n");
 
 }
+
 void push(stack **s, int key){
     stack *nn;
     stack *temp = *s; 
     nn = (stack *)malloc(sizeof(stack ));
-     if(nn == NULL)
+    if(nn == NULL)
         return;
 
     nn -> data = key;
@@ -31,13 +40,20 @@ void push(stack **s, int key){
     nn->next = temp;
 }
 
+int isEmpty(stack *s){
+    if(s == NULL)
+        return 1;
+    return 0;
+}
+
 int pop(stack **s){
     stack *temp = *s;
     int popped;
-    if(*s == NULL){
+    if(isEmpty(*s)){
         printf("Stack empty\n");
         return INT_MIN;
     }
+
     *s =  (*s) -> next;
     popped = temp->data;
     free(temp);
@@ -46,7 +62,9 @@ int pop(stack **s){
 }
 
 void main(){
-    stack *s =NULL;
+    //stack *s =NULL;
+    stack *s;
+    init(&s);
     push(&s, 1); 
     push(&s, 2);
     push(&s, 3);
@@ -58,4 +76,6 @@ void main(){
     printf("Popped %d\n", pop(&s));
     printf("Popped %d\n", pop(&s));
     display(s);
+    printf("Popped %d\n", pop(&s));
+    
 }
