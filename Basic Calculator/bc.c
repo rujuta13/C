@@ -80,10 +80,26 @@ node * add(node *L1, node *L2){
 		p1 = p1 ->next;
 		p2 = p2 ->next;
 	}
+	while(p1 != NULL){
+		sum = p1 -> data + carry;
+		carry = sum / 10;
+		insert(&n3, sum % 10);
+		p1 = p1 ->next;
+	}
+	while(p2 != NULL){
+		sum = p2 -> data + carry;
+		carry = sum / 10;
+		insert(&n3, sum % 10);
+		p2 = p2 ->next;
+	}
+
+	if(carry != 0)
+		insert(&n3, carry);
 
 	return n3;
 }
 
+/*
 node *subtract(node *L1, node *L2){
 	node *n3;
 	init(&n3);
@@ -96,19 +112,79 @@ node *subtract(node *L1, node *L2){
 	while(p1 != NULL && p2 != NULL){
 		diff = p1->data - p2->data - borrow;
 
+		if(diff >= 0){
+			borrow = 0;
+			insert(&n3, diff);
+		}
+		else{
+			borrow = 1;
+			insert(&n3, -diff);
+		}		
+
+		p1 = p1 ->next;
+		p2 = p2 ->next;
+	}
+	
+	while(p1 != NULL){
+		diff = p1->data - borrow;
+
 		if(diff >= 0)
 			borrow = 0;
 		else
 			borrow = 1;
 		
 		insert(&n3, diff + (10 * borrow));
-		
-
 		p1 = p1 ->next;
+	}
+	while(p2 != NULL){
+		diff = - p2->data - borrow;
+
+		if(diff >= 0)
+			borrow = 0;
+		else
+			borrow = 1;
+		
+		insert(&n3, diff + (10 * borrow));
 		p2 = p2 ->next;
 	}
 
 	return n3;
+}*/
+
+int isEqual(node *L1, node *L2){
+	node *p1, *p2;
+	p1 = L1;
+	p2 = L2;
+	
+	while(p1 != NULL && p2 != NULL){
+		if(p1 ->data != p2 -> data)
+			return 0;
+		p1 = p1 ->next;
+		p2 = p2 ->next;
+	}
+	while(p1 != NULL || p2 != NULL)
+		return 0;
+	
+	return 1;
+}
+
+node *multiply(node *L1, node *L2){
+	node *n3, *product, *one, *count;
+	init(&n3);
+	init(&product);
+	init(&one);
+	init(&count);
+	append(&one, 1);	
+
+	while(isEqual(L2, count) == 0){
+		product = add(L1, );
+	}
+
+}
+
+node *divide(node *L1, node *L2){
+	node *n3;
+	init(&n3);
 }
 
 void main(){
@@ -119,7 +195,7 @@ void main(){
 	
 	char *A;
 	printf("bc\n");
-	A = "1234 + 5678";
+	A = "100-100";
 	printf("%s\n", A);
 	int s = strlen(A);
 	
@@ -127,9 +203,9 @@ void main(){
 	int i = 0;
 	while(i < s ) { //A[i] - '0' >= 0 && A[i] - '0' <= 9){
 		//printf("%c\n", A[i]);
-		if(isspace(A[i]) == 1)
-			continue;
-		else if(isdigit(A[i]) == 0)
+		//if(isspace(A[i]) == 1)
+		//	continue;
+		if(isdigit(A[i]) == 0)
 			break;
 
 		insert(&n1, A[i] - '0');
@@ -137,7 +213,7 @@ void main(){
 	}
 	//display(n1);
 
-	i += 1; //skip '+' symbol
+	i += 1; //skip operator
 	
 	//second number
 	for(; i < s; i ++){
@@ -146,7 +222,7 @@ void main(){
 	}
 	//display(n2);
 	
-	//display(add(n1, n2));
+	display(add(n1, n2));
 	//display(subtract(n2, n1));
-
+	printf("%d\n", equalCheck(n1, n2));
 }
