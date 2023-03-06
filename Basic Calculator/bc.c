@@ -192,15 +192,17 @@ node *multiply(node *L1, node *L2){
 	init(&count);
 	append(&one, 1);	
 
-    display(L1);
-    display(L2);
-	reverse(L1);
-	reverse(l2);
+	reverse(&L1);
+	reverse(&L2);
+	
+   	display(L1);
+    	display(L2);/*
 	while(isEqual(L2, count) == 0){
 		product = add(L1, product);
+		printf("\t p:"); display(product);
 		count = add(count, one);
-	}
-    return product;
+	}*/
+    	return product;
 
 }
 
@@ -247,5 +249,5 @@ void main(){
 	//display(add(n1, n2));
 	//display(subtract(n2, n1));
 	//printf("%d\n", isEqual(n1, n2));
-    display(multiply(n1,n2));
+    	display(multiply(n1,n2));
 }
