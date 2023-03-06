@@ -63,7 +63,23 @@ void append(node **L, int key){
     pn -> next = nn;    
 }
 
+void reverse(List *L){
+    node * p1, *p2, *temp;
+    p1 = *L;
+    p2 = p1 -> next;
+    temp = NULL;
+    p1 -> next = NULL;
+    while(p2!=0){
+        temp = p2 -> next;
+        p2 -> next = p1; //reversing
+        p1 = p2;
+        p2 = temp; //increment p2
+    }
+    *L = p1;
+}
+
 node * add(node *L1, node *L2){
+    //takes reversed input
 	node *n3;
 	init(&n3);
 
@@ -176,9 +192,17 @@ node *multiply(node *L1, node *L2){
 	init(&count);
 	append(&one, 1);	
 
+    display(L1);
+    display(L2);
 	while(isEqual(L2, count) == 0){
-		product = add(L1, );
+		product = add(L1, product);
+        count = add(count, one);
+        printf("\t count:");
+        display(count);
+        printf("\t product:");
+        display(product);
 	}
+    return product;
 
 }
 
@@ -195,7 +219,7 @@ void main(){
 	
 	char *A;
 	printf("bc\n");
-	A = "100-100";
+	A = "10-12";
 	printf("%s\n", A);
 	int s = strlen(A);
 	
@@ -222,7 +246,8 @@ void main(){
 	}
 	//display(n2);
 	
-	display(add(n1, n2));
+	//display(add(n1, n2));
 	//display(subtract(n2, n1));
-	printf("%d\n", equalCheck(n1, n2));
+	//printf("%d\n", isEqual(n1, n2));
+    display(multiply(n1,n2));
 }
