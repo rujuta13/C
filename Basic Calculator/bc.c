@@ -63,7 +63,7 @@ void append(node **L, int key){
     pn -> next = nn;    
 }
 
-void reverse(List *L){
+void reverse(node **L){
     node * p1, *p2, *temp;
     p1 = *L;
     p2 = p1 -> next;
@@ -194,13 +194,11 @@ node *multiply(node *L1, node *L2){
 
     display(L1);
     display(L2);
+	reverse(L1);
+	reverse(l2);
 	while(isEqual(L2, count) == 0){
 		product = add(L1, product);
-        count = add(count, one);
-        printf("\t count:");
-        display(count);
-        printf("\t product:");
-        display(product);
+		count = add(count, one);
 	}
     return product;
 
