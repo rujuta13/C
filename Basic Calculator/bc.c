@@ -8,10 +8,16 @@ typedef struct node{
     struct node * next;
 } node;
 
-typedef struct stack{
+typedef struct nodestack{
     node *data;
-    struct stack *next;
-} stack;
+    struct nodestack *next;
+} nodestack;
+
+typedef struct charstack{
+    char data;
+    struct charstack *next;
+} charstack;
+
 
 void removeZero(node **L) {
 	reverse(L);
@@ -193,17 +199,24 @@ node *divide(node *L1, node *L2){
 	init(&n3);
 	insert(&n3, 0);
 
+	removeZero(&L1);
+	removeZero(&L2);
+
+	if(compare(L1, L2) == 0){
+		return n3;
+	}
+
 	init(&one);
 	insert(&one, 1);
 
 	init(&count);
 	insert(&count, 0);
 	
-	while(compare(L2, count) != -1){
-		n3 = subtract(n3, L1);
-		count = subtract(count, one);
+	while(compare(L2, L1) != -1){
+		L2 = subtract(L2, L1);
+		count = add(count, one);
 	}
-    return n3;
+    return count;
 }
 
 int precedence(char operator) {
@@ -214,8 +227,6 @@ int precedence(char operator) {
 		case '*':
 		case '/':
 			return 2;
-		case '^':
-			return 3;
 		default:
 			return -1;
 	}
@@ -226,6 +237,7 @@ int isOperator(char ch) {
 }
 
 void evaluate(char expr[], int s){
+	
 	int op = 0; //number of operators
     for(int i = 0; i < s; i ++){
         if(isOperator(expr[i]))
@@ -234,23 +246,68 @@ void evaluate(char expr[], int s){
 	
     node *num[op + 1]; //no of numbers = op + 1
 	printf("Operators: %d\n",op);
-
 	int count = 0; 
 	
 	for(int j =0; j<=op+1; j++)
 		init(&num[j]);
 
+	int j = 0;
 	for(int i = 0; i <s; i++){
-		if(isdigit(expr[i])){
-			//printf("t1\n");
+		if(isdigit(expr[i]))
 			insert(&num[count], expr[i] - '0');
-		}
-		else{
-			//printf("t2\n");
+		else
 			count ++;
-		}
+		
 	}
 	
-	for(int j =0; j<op+1; j++)
-		display(num[j]);
+	nodestack operand;
+	charstack operator;
+
+	initNodeStack(&operand);
+	initCharStack(&operator);
+
+	count = 0;
+	node *temp, *n1, *n2;
+	init(&n1);
+	init(&n2);
+
+	char op_temp;
+
+	
+	for(int i = 0; i<s; i++){
+		if( (isdigit(expr[i]) && isOperator(expr[i+1])) || i == s-1){ 
+			//pushing numbers onto the operand stack
+			pushnode(&operand, num[count]);
+			count++;
+		}
+		else if(isOperator(expr[i])){
+			if(isEmptyChar(operator))
+				pushchar(&operator, expr[i]);
+				
+			else{
+				//printf("Current %d\n ",precedence(expr[i]));
+				//printf("Stack %d\n ",precedence(peek(operator)));
+				if(precedence(expr[i]) > precedence(peek(operator))){
+					pushchar(&operator, expr[i]);
+				}
+				else{
+					op_temp = popchar(&operator);
+					printf("%c\n",op_temp);
+					//n1 = popnode(operand);
+					//n2 = popnode(operand);
+					display(n1);
+					display(n2);
+					pushchar(&operator, expr[i]);
+				}
+			}
+		}
+
+	
+	}
+	display(popnode(operand));
+	
+	displayNodeStack(operand);
+	displayCharStack(operator);
+	
+	
 }
