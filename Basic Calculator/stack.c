@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<string.h>
-#include <math.h>
-#include <limits.h>
 
 typedef struct node{
     int data;
@@ -15,8 +12,7 @@ typedef struct stack{
 } stack;
 
 
-
-void init(stack **head){
+void initStack(stack **head){
 	*head = (stack *) malloc(sizeof(stack *));
 	if(*head == NULL)
 		return;
@@ -24,7 +20,7 @@ void init(stack **head){
 	*head = NULL;
 }
 
-void display(stack *s){
+void displayStack(stack *s){
     stack * p;
     p = s;
     printf("[");
@@ -67,3 +63,4 @@ node *pop(stack **s){
     
     return popped;
 }
+

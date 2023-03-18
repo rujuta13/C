@@ -18,9 +18,15 @@ void evaluate(char , int);
 int precedence(char);
 int isOperator(char);
 
-void init(stack **);
-void display(stack *);
+void init(node **);
+void display(node *);
+void insert(node  **, int);
+void append(node **, int);
+int count(node *L);
+void reverse(node **);
+
+void initStack(stack **);
+void displayStack(stack *);
 void push(stack **, node *);
 int isEmpty(stack *);
 node *pop(stack **);
-
