@@ -8,86 +8,81 @@ typedef struct node{
     struct node * next;
 } node;
 
-void init(node **head){
-	(*head) = (node *) malloc(sizeof(node *));
-	if((*head) == NULL)
-		return;
+typedef struct stack{
+    node *data;
+    struct stack *next;
+} stack;
 
-	(*head) = NULL;
-}
+void removeZero(node **L) {
+	reverse(L);
+    node *p = *L;
+    node *q;
 
-void display(node *L){
-    node * pn;
-    pn = L;
+    // Traverse the linked list and delete each node until a non-zero element is found
+    while (p != NULL && p->data == 0) {
+        q = p->next;
+        free(p);
+        p = q;
+    }
+    
+    // Update the head of the linked list to the first non-zero element
+    *L = p;
 	
-    //printf("[");
-    while(pn != NULL){
-        printf("%d", pn -> data);
-        pn = pn -> next;
-    }
-    printf(" \n");
-
+	reverse(L);
+	if(*L == NULL)
+		append(L, 0);
 }
 
-void insert(node  **head, int key){
-    	node * nn;
-    	nn = (node *)malloc(sizeof(node *));
-    	if(!nn) 
-        	return;
-    
-    	nn -> data = key;
-	nn -> next = (*head);
-	(*head) = nn;
+int compare(node *L1, node *L2){
+	//returns 1 if L1 bigger or equal
+	//0 if L2 bigger
+	//-1 if equal
+	int flag = -1;
+
+	reverse(&L1);
+	reverse(&L2);
+
+	node *p1 , *p2;
+	p1 = L1;
+	p2 = L2;
+	
+	if(count(L1) > count(L2))
+		flag = 1;
+	
+	else if(count(L1) < count(L2))
+		flag = 0;
+
+	else{ //same number of nodes
+		while(p1 != NULL && p2 != NULL){
+			if(p1->data > p2->data){
+				flag = 1;
+				break;
+			}
+			else if(p1->data < p2->data){
+				flag = 0;
+				break;
+			}
+			p1 = p1 -> next;
+			p2 = p2 -> next;
+		}
+	}
+	//numbers are equal
+	reverse(&L1);
+	reverse(&L2);
+	return flag; 
 }
 
-void append(node **L, int key){
-    node * nn;
-    nn = (node *)malloc(sizeof(node *));
-    if(!nn) //if nn is NULL then return
-        return;
-    
-    nn -> data = key;
-    nn -> next = NULL;
-
-    node * pn;
-    pn = *L; 
-
-    if(pn == NULL){
-        *L = nn;
-        return;
-    }
-
-    while((pn -> next) != 0)
-        pn = pn -> next;
-
-    pn -> next = nn;    
-}
-
-node * reverse(node *L){
-    node * p1, *p2, *temp;
-    p1 = L;
-    p2 = p1 -> next;
-    temp = NULL;
-    p1 -> next = NULL;
-    while(p2!=0){
-        temp = p2 -> next;
-        p2 -> next = p1; //reversing
-        p1 = p2;
-        p2 = temp; //increment p2
-    }
-    L = p1;
-	return L;
-}
-
-node * add(node *L1, node *L2){
-    //takes reversed input
+node *add(node *L1, node *L2){
 	node *n3;
 	init(&n3);
+
+	removeZero(&L1);
+	removeZero(&L2);
 
 	node *p1, *p2;
 	p1 = L1;
 	p2 = L2;
-	
+
 	
 	int sum, carry = 0;
 	while(p1 != NULL && p2 != NULL){
@@ -113,138 +108,184 @@ node * add(node *L1, node *L2){
 
 	if(carry != 0)
 		insert(&n3, carry);
-
+ 
+	reverse(&n3);
 	return n3;
 }
 
-/*
 node *subtract(node *L1, node *L2){
+	//returns only absolute value
 	node *n3;
 	init(&n3);
+
+	removeZero(&L1);
+	removeZero(&L2);
 
 	node *p1, *p2;
 	p1 = L1;
 	p2 = L2;
-	
+
+	if(compare(L1, L2) == 0){
+		n3 = subtract(L2,L1);
+		removeZero(&n3);
+		return n3;
+	}
+
 	int diff, borrow = 0;
 	while(p1 != NULL && p2 != NULL){
-		diff = p1->data - p2->data - borrow;
-
-		if(diff >= 0){
+		if(p1 -> data >= p2 -> data)
 			borrow = 0;
-			insert(&n3, diff);
-		}
 		else{
 			borrow = 1;
-			insert(&n3, -diff);
-		}		
-
+			p1 -> next ->data = p1->next -> data -1;
+		}
+		
+		insert(&n3, 10*borrow + p1 -> data - p2->data);
 		p1 = p1 ->next;
 		p2 = p2 ->next;
 	}
 	
 	while(p1 != NULL){
-		diff = p1->data - borrow;
-
-		if(diff >= 0)
+		if(p1 -> data >= 0)
 			borrow = 0;
-		else
+		else{
 			borrow = 1;
+			p1 -> next ->data = p1->next -> data -1;
+		}
 		
-		insert(&n3, diff + (10 * borrow));
+		insert(&n3, 10*borrow + p1 -> data);
 		p1 = p1 ->next;
 	}
-	while(p2 != NULL){
-		diff = - p2->data - borrow;
-
-		if(diff >= 0)
-			borrow = 0;
-		else
-			borrow = 1;
-		
-		insert(&n3, diff + (10 * borrow));
-		p2 = p2 ->next;
-	}
-
+	removeZero(&n3);
+	reverse(&n3);
 	return n3;
-}*/
-
-int isEqual(node *L1, node *L2){
-	node *p1, *p2;
-	p1 = L1;
-	p2 = L2;
-	
-	while(p1 != NULL && p2 != NULL){
-		if(p1 ->data != p2 -> data)
-			return 0;
-		p1 = p1 ->next;
-		p2 = p2 ->next;
-	}
-	while(p1 != NULL || p2 != NULL)
-		return 0;
-	
-	return 1;
 }
 
 node *multiply(node *L1, node *L2){
-	node *n3, *product, *one, *count;
+	node *n3, *one, *count;
 	init(&n3);
-	init(&product);
-	init(&one);
-	init(&count);
-	append(&one, 1);	
+	insert(&n3, 0);
 
-	
-	while(isEqual(L2, count) == 0){
-		product = add(L1, reverse(&product));
-		count = add(reverse(&count), one);
+	if(compare(L1, L2) == 0){
+		n3 = multiply(L2,L1);
+		return n3;
 	}
-    return product;A
 
+	init(&one);
+	insert(&one, 1);
+
+	init(&count);
+	insert(&count, 0);
+	
+	removeZero(&L1);
+	removeZero(&L2);
+
+	while(compare(L2, count) != -1){
+		n3 = add(n3, L1);
+		count = add(one, count);
+	}
+
+    return n3;
 }
 
 node *divide(node *L1, node *L2){
-	node *n3;
+	node *n3, *one, *count;
 	init(&n3);
+	insert(&n3, 0);
+
+	init(&one);
+	insert(&one, 1);
+
+	init(&count);
+	insert(&count, 0);
+	
+	while(compare(L2, count) != -1){
+		n3 = subtract(n3, L1);
+		count = subtract(count, one);
+	}
+    return n3;
 }
 
-void main(){
-	node *n1, *n2;
+void evaluate(char expr[], int s){
+	/*
+	node *n1, *n2, *n3;
 	init(&n1);
 	init(&n2);
-	//insert(&n1, 1);
-	
-	char *A;
-	printf("bc\n");
-	A = "10-12";
-	printf("%s\n", A);
-	int s = strlen(A);
-	
-	//first number
-	int i = 0;
-	while(i < s ) { //A[i] - '0' >= 0 && A[i] - '0' <= 9){
-		//printf("%c\n", A[i]);
-		//if(isspace(A[i]) == 1)
-		//	continue;
-		if(isdigit(A[i]) == 0)
-			break;
+	init(&n3);
+	//append(&n3, 0);
 
-		insert(&n1, A[i] - '0');
+	int i = 0;
+	while(i<s && isdigit(expr[i])){
+		insert(&n1, expr[i] - '0');
 		i++;
 	}
 	//display(n1);
-
 	i += 1; //skip operator
 	
 	//second number
 	for(; i < s; i ++){
-		//printf("%c\n", A[i]);
-		insert(&n2, A[i] - '0');
+		//printf("%c\n", expr[i]);
+		insert(&n2, expr[i] - '0');
 	}
 	//display(n2);
+
 	
-	//display(add(n1, n2));
-	//display(subtract(n2, n1));
-	//printf("%d\n", isEqual(n1, n2));
-    display(multiply(n1,n2));
+	
+
+	printf("\n Number 1: ");
+	display(n1);
+	printf("\n Number 2: ");
+	display(n2);
+	printf("\n");
+	
+	
+	n3 = subtract(n1, n2);
+	//n3 = multiply(n1,n2);
+	//n3 = add(n1,n2);
+	reverse(&n3);
+	display(n3);
+	
+	
+	printf("Compare: %d",compare(n1,n2));
+	printf("\n");
+	display(n1);
+	display(n2);
+	
+*/
+	int op = 0; //number of operators
+    for(int i = 0; i < s; i ++){
+        if(isOperator(expr[i]))
+            op ++;
+    }
+
+    node *A[op + 1]; //no of numbers = op + 1
+	int count = 0; 
+	int i = 0; //indexing for expression
+	while(count < op + 1){
+		if(isdigit(expr[i])){
+			insert(&A[count], expr[i] - '0');
+		}
+		if(isOperator(expr[i]))
+            count ++;		
+	}
 }
+
+int precedence(char operator) {
+	switch (operator) {
+		case '+':
+		case '-':
+			return 1;
+		case '*':
+		case '/':
+			return 2;
+		case '^':
+			return 3;
+		default:
+			return -1;
+	}
+}
+
+int isOperator(char ch) {
+	return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
+}
+
