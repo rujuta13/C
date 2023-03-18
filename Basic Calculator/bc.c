@@ -206,70 +206,6 @@ node *divide(node *L1, node *L2){
     return n3;
 }
 
-void evaluate(char expr[], int s){
-	/*
-	node *n1, *n2, *n3;
-	init(&n1);
-	init(&n2);
-	init(&n3);
-	//append(&n3, 0);
-
-	int i = 0;
-	while(i<s && isdigit(expr[i])){
-		insert(&n1, expr[i] - '0');
-		i++;
-	}
-	//display(n1);
-	i += 1; //skip operator
-	
-	//second number
-	for(; i < s; i ++){
-		//printf("%c\n", expr[i]);
-		insert(&n2, expr[i] - '0');
-	}
-	//display(n2);
-
-	
-	
-
-	printf("\n Number 1: ");
-	display(n1);
-	printf("\n Number 2: ");
-	display(n2);
-	printf("\n");
-	
-	
-	n3 = subtract(n1, n2);
-	//n3 = multiply(n1,n2);
-	//n3 = add(n1,n2);
-	reverse(&n3);
-	display(n3);
-	
-	
-	printf("Compare: %d",compare(n1,n2));
-	printf("\n");
-	display(n1);
-	display(n2);
-	
-*/
-	int op = 0; //number of operators
-    for(int i = 0; i < s; i ++){
-        if(isOperator(expr[i]))
-            op ++;
-    }
-
-    node *A[op + 1]; //no of numbers = op + 1
-	int count = 0; 
-	int i = 0; //indexing for expression
-	while(count < op + 1){
-		if(isdigit(expr[i])){
-			insert(&A[count], expr[i] - '0');
-		}
-		if(isOperator(expr[i]))
-            count ++;		
-	}
-}
-
 int precedence(char operator) {
 	switch (operator) {
 		case '+':
@@ -289,3 +225,32 @@ int isOperator(char ch) {
 	return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
 }
 
+void evaluate(char expr[], int s){
+	int op = 0; //number of operators
+    for(int i = 0; i < s; i ++){
+        if(isOperator(expr[i]))
+            op ++;
+    }
+	
+    node *num[op + 1]; //no of numbers = op + 1
+	printf("Operators: %d\n",op);
+
+	int count = 0; 
+	
+	for(int j =0; j<=op+1; j++)
+		init(&num[j]);
+
+	for(int i = 0; i <s; i++){
+		if(isdigit(expr[i])){
+			//printf("t1\n");
+			insert(&num[count], expr[i] - '0');
+		}
+		else{
+			//printf("t2\n");
+			count ++;
+		}
+	}
+	
+	for(int j =0; j<op+1; j++)
+		display(num[j]);
+}
