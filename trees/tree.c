@@ -55,6 +55,38 @@ void inorder(BST t){
 	inorder(t -> right);
 }
 
+int search(BST t, int key){
+	//if key is found
+	//returns number of comparisons taken for search
+	//if not found return 0
+
+	node *p;
+	int count = 0; //number of comparisons
+
+	p = t;
+	if(p == NULL)
+		return 0;
+	while(p){
+		count ++;
+		if(p -> data == key)
+			return count;
+		if(p ->data < key)
+			p = p -> right;
+		else
+			p = p -> left;
+	}
+
+	//number not found
+	return 0;
+	
+}
+
+int countNodes(BST t){
+	if(t == NULL)
+		return 0;
+	return 1 + countNodes(t->left) + countNodes(t->right);
+}
+
 void main(){
 	BST t;
 	initBST(&t);
@@ -62,4 +94,6 @@ void main(){
 	insert(&t, 75);
 	insert(&t, 80);
 	inorder(t);
+	printf("\nCOMPARISONS %d\n",search(t, 75));
+	printf("\nCOMPARISONS %d\n",search(t, 0));
 }

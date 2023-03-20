@@ -162,7 +162,6 @@ node *subtract(node *L1, node *L2){
 		insert(&n3, 10*borrow + p1 -> data);
 		p1 = p1 ->next;
 	}
-	removeZero(&n3);
 	reverse(&n3);
 	return n3;
 }
@@ -176,7 +175,7 @@ node *multiply(node *L1, node *L2){
 		n3 = multiply(L2,L1);
 		return n3;
 	}
-
+	
 	init(&one);
 	insert(&one, 1);
 
@@ -190,7 +189,7 @@ node *multiply(node *L1, node *L2){
 		n3 = add(n3, L1);
 		count = add(one, count);
 	}
-
+	
     return n3;
 }
 
@@ -233,7 +232,7 @@ int precedence(char operator) {
 }
 
 int isOperator(char ch) {
-	return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
+	return (ch == '+' || ch == '-' || ch == '*' || ch == '/');
 }
 
 void evaluate(char expr[], int s){
@@ -245,19 +244,16 @@ void evaluate(char expr[], int s){
     }
 	
     node *num[op + 1]; //no of numbers = op + 1
-	printf("Operators: %d\n",op);
-	int count = 0; 
 	
+	int count = 0; 
 	for(int j =0; j<=op+1; j++)
 		init(&num[j]);
 
-	int j = 0;
-	for(int i = 0; i <s; i++){
+	for(int i = 0; i <= s; i++){
 		if(isdigit(expr[i]))
 			insert(&num[count], expr[i] - '0');
 		else
 			count ++;
-		
 	}
 	
 	nodestack operand;
@@ -267,15 +263,16 @@ void evaluate(char expr[], int s){
 	initCharStack(&operator);
 
 	count = 0;
-	node *temp, *n1, *n2;
+	node *temp, *n1, *n2, *n3;
 	init(&n1);
 	init(&n2);
+	init(&n3);
+	insert(&n3, 0);
 
 	char op_temp;
 
-	
-	for(int i = 0; i<s; i++){
-		if( (isdigit(expr[i]) && isOperator(expr[i+1])) || i == s-1){ 
+	for(int i = 0; i < s; i++){
+		if( (isdigit(expr[i]) && isOperator(expr[i+1]))){ 
 			//pushing numbers onto the operand stack
 			pushnode(&operand, num[count]);
 			count++;
@@ -292,22 +289,23 @@ void evaluate(char expr[], int s){
 				}
 				else{
 					op_temp = popchar(&operator);
-					printf("%c\n",op_temp);
-					//n1 = popnode(operand);
-					//n2 = popnode(operand);
-					display(n1);
-					display(n2);
+					
+					n1 = popnode(&operand);
+					n2 = popnode(&operand);
+					
+					switch(op_temp){
+						case '+': n3 = add(n1, n2); break;
+						case '-': n3 = subtract(n1, n2); break;
+						case '*': n3 = multiply(n1, n2); break;
+						case '/': n3 = divide(n1, n2); break;
+					}
+
+					pushnode(&operand, n3);
 					pushchar(&operator, expr[i]);
 				}
 			}
 		}
-
-	
 	}
-	display(popnode(operand));
-	
 	displayNodeStack(operand);
-	displayCharStack(operator);
-	
-	
+	//displayCharStack(operator);	
 }

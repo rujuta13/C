@@ -28,14 +28,15 @@ void initNodeStack(nodestack **head){
 void displayNodeStack(nodestack *s){
     nodestack * p;
     p = s;
-    printf("[");
+    printf("\n");
     while(p != 0){
         display(p->data);
         p = p -> next;
     }
-    printf(" ]\n");
+    printf("\n");
 
 }
+
 
 void pushnode(nodestack **s, node *key){
     nodestack *nn;
@@ -59,7 +60,7 @@ int isEmptyNode(nodestack *s){
 
 node *popnode(nodestack **s){
     nodestack *temp = *s;
-    node **popped;
+    node *popped;
     if(isEmptyNode(*s))
         return NULL;
 
