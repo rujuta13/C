@@ -24,14 +24,16 @@ void removeZero(node **L) {
     node *p = *L;
     node *q;
 
-    // Traverse the linked list and delete each node until a non-zero element is found
-    while (p != NULL && p->data == 0) {
+	if(p == NULL)
+		return;
+    // Traverse the linked list and delete each node until a non-n3 element is found
+    while ((p->next) != NULL && p->data == 0) {
         q = p->next;
         free(p);
         p = q;
     }
     
-    // Update the head of the linked list to the first non-zero element
+    // Update the head of the linked list to the first non-n3 element
     *L = p;
 	
 	reverse(L);
@@ -88,7 +90,6 @@ node *add(node *L1, node *L2){
 	node *p1, *p2;
 	p1 = L1;
 	p2 = L2;
-
 	
 	int sum, carry = 0;
 	while(p1 != NULL && p2 != NULL){
@@ -186,6 +187,7 @@ node *multiply(node *L1, node *L2){
 	removeZero(&L2);
 
 	while(compare(L2, count) != -1){
+		
 		n3 = add(n3, L1);
 		count = add(one, count);
 	}
@@ -197,13 +199,13 @@ node *divide(node *L1, node *L2){
 	node *n3, *one, *count;
 	init(&n3);
 	insert(&n3, 0);
-
-	removeZero(&L1);
-	removeZero(&L2);
-
+	
+	/*
+	//if L2 greater than L1
 	if(compare(L1, L2) == 0){
 		return n3;
 	}
+	*/
 
 	init(&one);
 	insert(&one, 1);
@@ -211,8 +213,11 @@ node *divide(node *L1, node *L2){
 	init(&count);
 	insert(&count, 0);
 	
-	while(compare(L2, L1) != -1){
-		L2 = subtract(L2, L1);
+	removeZero(&L1);
+	removeZero(&L2);
+
+	while(compare(L1, n3) == 0){
+		n3 = add(L2, n3);
 		count = add(count, one);
 	}
     return count;
@@ -236,7 +241,6 @@ int isOperator(char ch) {
 }
 
 void evaluate(char expr[], int s){
-	
 	int op = 0; //number of operators
     for(int i = 0; i < s; i ++){
         if(isOperator(expr[i]))
@@ -272,7 +276,7 @@ void evaluate(char expr[], int s){
 	char op_temp;
 
 	for(int i = 0; i < s; i++){
-		if( (isdigit(expr[i]) && isOperator(expr[i+1]))){ 
+		if(isdigit(expr[i]) && isOperator(expr[i+1])){ 
 			//pushing numbers onto the operand stack
 			pushnode(&operand, num[count]);
 			count++;
@@ -282,16 +286,13 @@ void evaluate(char expr[], int s){
 				pushchar(&operator, expr[i]);
 				
 			else{
-				//printf("Current %d\n ",precedence(expr[i]));
-				//printf("Stack %d\n ",precedence(peek(operator)));
-				if(precedence(expr[i]) > precedence(peek(operator))){
+				if(precedence(expr[i]) >= precedence(peek(operator)))
 					pushchar(&operator, expr[i]);
-				}
 				else{
 					op_temp = popchar(&operator);
 					
-					n1 = popnode(&operand);
-					n2 = popnode(&operand);
+					popnode(&operand, &n1);
+					popnode(&operand, &n2);
 					
 					switch(op_temp){
 						case '+': n3 = add(n1, n2); break;
@@ -306,6 +307,23 @@ void evaluate(char expr[], int s){
 			}
 		}
 	}
-	displayNodeStack(operand);
+	while(isEmptyChar(operator) == 0){
+		op_temp = popchar(&operator);
+		
+		popnode(&operand, &n1);
+		popnode(&operand, &n2);
+		
+		switch(op_temp){
+			case '+': n3 = add(n1, n2); break;
+			case '-': n3 = subtract(n1, n2); break;
+			case '*': n3 = multiply(n1, n2); break;
+			case '/': n3 = divide(n1, n2); break;
+		}
+
+		pushnode(&operand, n3);
+	}
+	popnode(&operand, &n3);
+	reverse(&n3);
+	display(n3);
 	//displayCharStack(operator);	
 }

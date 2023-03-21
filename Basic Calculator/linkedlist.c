@@ -74,7 +74,11 @@ int count(node *L){
 
 void reverse(node **L){
     node * p1, *p2, *temp;
+
     p1 = *L;
+    if(p1 == NULL)
+        return;
+        
     p2 = p1 -> next;
     temp = NULL;
     p1 -> next = NULL;

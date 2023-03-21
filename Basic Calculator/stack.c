@@ -37,7 +37,6 @@ void displayNodeStack(nodestack *s){
 
 }
 
-
 void pushnode(nodestack **s, node *key){
     nodestack *nn;
     nodestack *temp = *s; 
@@ -58,17 +57,17 @@ int isEmptyNode(nodestack *s){
     return 0;
 }
 
-node *popnode(nodestack **s){
+void popnode(nodestack **s, node **popped){
     nodestack *temp = *s;
-    node *popped;
-    if(isEmptyNode(*s))
-        return NULL;
+    
+    if(isEmptyNode(*s)){
+        (*popped) = NULL;
+        return;
+    }
 
     *s =  (*s) -> next;
-    popped = temp->data;
+    (*popped) = temp->data;
     free(temp);
-    
-    return popped;
 }
 
 //Stacks using CHAR as data
@@ -107,7 +106,7 @@ void pushchar(charstack **s, char key){
 }
 
 int isEmptyChar(charstack *s){
-    if(s == NULL)
+    if(s == 0)
         return 1;
     return 0;
 }
@@ -116,7 +115,7 @@ char popchar(charstack **s){
     charstack *temp = *s;
     char popped;
     if(isEmptyChar(*s))
-        return NULL;
+        return 0;
 
     *s =  (*s) -> next;
     popped = temp->data;
