@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "prime_no": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "string": "c"
     }
 }

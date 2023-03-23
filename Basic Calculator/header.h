@@ -23,6 +23,7 @@ node *divide(node *, node *);
 void evaluate(char *, int);
 int precedence(char);
 int isOperator(char);
+node * operate(charstack*, nodestack* );
 
 void init(node **);
 void display(node *);
@@ -35,7 +36,7 @@ void initNodeStack(nodestack **);
 void displayNodeStack(nodestack *);
 void pushnode(nodestack **, node *);
 int isEmptyNode(nodestack *);
-node *popnode(nodestack **);
+void popnode(nodestack **, node **);
 
 void initCharStack(charstack **);
 void displayCharStack(charstack *);

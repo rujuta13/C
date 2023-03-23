@@ -24,11 +24,8 @@ void removeZero(node **L) {
     node *p = *L;
     node *q;
 	
-	if(p == NULL)
-		return;
-
     // Traverse the linked list and delete each node until a non-n3 element is found
-    while (p->next != NULL && p->data == 0) {
+    while (p != NULL && p->data == 0) {
         q = p->next;
         free(p);
         p = q;
@@ -36,7 +33,10 @@ void removeZero(node **L) {
     
     // Update the head of the linked list to the first non-n3 element
     *L = p;
-	reverse(L);	
+	
+	reverse(L);
+	if(*L == NULL)
+		append(L, 0);
 }
 
 int compare(node *L1, node *L2){
@@ -119,6 +119,7 @@ node *add(node *L1, node *L2){
 }
 
 node *subtract(node *L1, node *L2){
+	//returns only absolute value
 	node *n3;
 	init(&n3);
 
@@ -132,9 +133,6 @@ node *subtract(node *L1, node *L2){
 	if(compare(L1, L2) == 0){
 		n3 = subtract(L2,L1);
 		removeZero(&n3);
-		reverse(&n3);
-		n3->data = n3->data * -1;
-		reverse(&n3);
 		return n3;
 	}
 	
@@ -163,7 +161,6 @@ node *subtract(node *L1, node *L2){
 	}
 	
 	reverse(&n3);
-	removeZero(&n3);
 	return n3;
 }
 
@@ -191,6 +188,7 @@ node *multiply(node *L1, node *L2){
 		n3 = add(n3, L1);
 		count = add(one, count);
 	}
+	
     return n3;
 }
 
@@ -258,9 +256,7 @@ node *mod(node *L1, node *L2){
 	}
 	
 	temp = multiply(quotient, L2);
-	temp = subtract(L1, temp);
-	return temp;
-
+	return subtract(L1, temp);
 }
 
 node *power(node *L1, node *L2){
@@ -312,53 +308,18 @@ int isOperator(char ch) {
 	return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%' || ch == '^');
 }
 
-node * operate(charstack* operator, nodestack* operand){
-    node *n1, *n2, *n3;
-    char op_temp;
-
-	init(&n1);
-	init(&n2);
-	init(&n3);
-	insert(&n3, 0);
-
-    op_temp = popchar(operator);
-    popnode(operand, &n1);
-	popnode(operand, &n2);
-
-    switch(op_temp){
-        case '+': n3 = add(n2, n1); break;
-        case '-': n3 = subtract(n2, n1); break;
-        case '*': n3 = multiply(n2, n1); break;
-        case '/': n3 = divide(n2, n1); break;
-        case '%': n3 = mod(n2, n1); break;
-        case '^': n3 = power(n2, n1); break;
-    }   
-    
-    return n3;
-}
-
 void evaluate(char expr[], int s){
-	nodestack operand;
-	charstack operator;
-    node *result;
-	char c;
-	int n_op = 0; //number of operators
-    int count = 0; 
-    
-	initNodeStack(&operand);
-	initCharStack(&operator);
-	init(&result);
-	insert(&result, 0);
-
+	int op = 0; //number of operators
     for(int i = 0; i < s; i ++){
         if(isOperator(expr[i]))
-            n_op ++;
+            op ++;
     }
 	
-    node *num[n_op + 1]; //no of numbers = op + 1
+    node *num[op + 1]; //no of numbers = op + 1
 	
+	int count = 0; 
 	//initialising numbers
-	for(int j =0; j <= n_op+1; j++)
+	for(int j =0; j<=op+1; j++)
 		init(&num[j]);
 
 	//inserting numbers in array
@@ -368,54 +329,74 @@ void evaluate(char expr[], int s){
 		else
 			count ++;
 	}
+	
+	nodestack operand;
+	charstack operator;
+
+	initNodeStack(&operand);
+	initCharStack(&operator);
 
 	count = 0;
-	
-	char temp;
+	node *temp, *n1, *n2, *n3;
+	init(&n1);
+	init(&n2);
+	init(&n3);
+	insert(&n3, 0);
+
+	char op_temp;
+
 	for(int i = 0; i < s; i++){
-		c = expr[i];
-		if(isdigit(c)){ 
-            //traverse till operator is reached
-            while(isdigit(expr[i]))
-                i++;
-
-            //now i is at operator
-            i --;
-
-			//push numbers onto the operand stack
+		if(isdigit(expr[i]) && (isOperator(expr[i+1]) || i == s - 1) ){ 
+			//pushing numbers onto the operand stack
 			pushnode(&operand, num[count]);
 			count++;
 		}
+		else if(isOperator(expr[i])){
+			if(isEmptyChar(operator))
+				pushchar(&operator, expr[i]);
+				
+			else{
+				if(precedence(expr[i]) >= precedence(peek(operator)))
+					pushchar(&operator, expr[i]);
+				else{
+					op_temp = popchar(&operator);
+					
+					popnode(&operand, &n1);
+					popnode(&operand, &n2);
+					
+					switch(op_temp){
+						case '+': n3 = add(n2, n1); break;
+						case '-': n3 = subtract(n2, n1); break;
+						case '*': n3 = multiply(n2, n1); break;
+						case '/': n3 = divide(n2, n1); break;
+						case '%': n3 = mod(n2, n1); break;
+						case '^': n3 = power(n2, n1); break;
+					}
 
-		/*
-        else if(c == '(')
-			pushchar(&operator, c);
-		else if(c == ')' ){
-			while(peek(operator) != '('){
-				result = operate(&operator, &operand);
-				pushnode(&operand, result);
+					pushnode(&operand, n3);
+					pushchar(&operator, expr[i]);
+				}
 			}
-			printf("\nresult:");
-				display(result);
-			temp = popchar(&operator);
-		}
-		*/
-
-		else if(isOperator(c)){
-            while(isEmptyChar(operator) == 0 && precedence(c) <= precedence(peek(operator))){
-                result = operate(&operator, &operand);
-				pushnode(&operand, result);
-            }
-            pushchar(&operator, c);
 		}
 	}
-
 	while(isEmptyChar(operator) == 0){
-        result = operate(&operator, &operand);
-        pushnode(&operand, result);
+		op_temp = popchar(&operator);
+		
+		popnode(&operand, &n1);
+		popnode(&operand, &n2);
+		
+		switch(op_temp){
+			case '+': n3 = add(n2, n1); break;
+			case '-': n3 = subtract(n2, n1); break;
+			case '*': n3 = multiply(n2, n1); break;
+			case '/': n3 = divide(n2, n1); break;
+			case '%': n3 = mod(n2, n1); break;
+			case '^': n3 = power(n2, n1); break;
+		}
+		pushnode(&operand, n3);
 	}
-
-	popnode(&operand, &result);
-	reverse(&result);
-	display(result);
+	popnode(&operand, &n3);
+	reverse(&n3);
+	display(n3);
+	//displayCharStack(operator);	
 }

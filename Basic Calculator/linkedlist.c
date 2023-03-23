@@ -3,7 +3,7 @@
 
 typedef struct node{
     int data;
-    struct node * next;
+    struct node *next;
 } node;
 
 void init(node **head){
@@ -71,6 +71,7 @@ int count(node *L){
     }
     return c;
 }
+
 
 void reverse(node **L){
     node * p1, *p2, *temp;

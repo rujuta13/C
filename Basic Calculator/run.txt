@@ -1,0 +1,3 @@
+gcc -c main.c bc.c linkedlist.c stack.c
+gcc main.o bc.o linkedlist.o stack.o
+./a.exe
