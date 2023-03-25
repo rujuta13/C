@@ -28,12 +28,12 @@ void initNodeStack(nodestack **head){
 void displayNodeStack(nodestack *s){
     nodestack * p;
     p = s;
-    printf("\n");
+    printf("[\n");
     while(p != 0){
         display(p->data);
         p = p -> next;
     }
-    printf("\n");
+    printf("]\n");
 
 }
 
@@ -83,8 +83,8 @@ void displayCharStack(charstack *s){
     charstack * p;
     p = s;
     printf("[");
-    while(p != 0){
-        printf("%c ", p->data);
+    while(p != NULL){
+        printf(" %c", p->data);
         p = p -> next;
     }
     printf(" ]\n");
@@ -106,7 +106,7 @@ void pushchar(charstack **s, char key){
 }
 
 int isEmptyChar(charstack *s){
-    if(s == 0)
+    if(s == NULL)
         return 1;
     return 0;
 }
@@ -115,7 +115,7 @@ char popchar(charstack **s){
     charstack *temp = *s;
     char popped;
     if(isEmptyChar(*s))
-        return 0;
+        return ' ';
 
     *s =  (*s) -> next;
     popped = temp->data;
@@ -125,6 +125,8 @@ char popchar(charstack **s){
 }
 
 char peek(charstack *s){
-    charstack *p = s;
-    return p->data;
+    /*
+    if(isEmptyChar(s))
+        return ' ';*/
+    return s->data;
 }

@@ -78,12 +78,6 @@ int compare(node *L1, node *L2){
 	return flag; 
 }
 
-void negate(node **L){
-    reverse(L);
-    (*L)->data *= -1;
-    reverse(L);
-}
-
 node *add(node *L1, node *L2){
 	node *n3;
 	init(&n3);
@@ -138,7 +132,9 @@ node *subtract(node *L1, node *L2){
 	if(compare(L1, L2) == 0){
 		n3 = subtract(L2,L1);
 		removeZero(&n3);
-		negate(&n3);
+		reverse(&n3);
+		n3->data = n3->data * -1;
+		reverse(&n3);
 		return n3;
 	}
 	
@@ -172,53 +168,18 @@ node *subtract(node *L1, node *L2){
 }
 
 node *multiply(node *L1, node *L2){
-	node *n3, *one, *count, *zero;
-    init(&zero);
-    insert(&zero, 0);
-
+	node *n3, *one, *count;
 	init(&n3);
 	insert(&n3, 0);
-   
+
 	removeZero(&L1);
 	removeZero(&L2);
 
-    //if either L1 or L2 is 0
-    if(compare(L1, zero) == -1 || compare(L2, zero) == -1)
-        return zero;
-
-/*
-    //both negative
-    if(compare(L1, zero) == 0 && compare(L2, zero) == 0){
-        negate(&L1);
-        negate(&L2);
-        n3 = multiply(L1,L2);
-        negate(&L1);
-        negate(&L2);
-        return n3;
-    }
-    //L1 negative
-    else if(compare(L1, zero) == 0){
-        negate(&L1);
-        n3 = multiply(L1,L2);
-        negate(&L1);
-
-        negate(&n3);
-        return n3;
-    }
-    //L2 negative
-    else if(compare(L2, zero) == 0){
-        negate(&L2);
-        n3 = multiply(L1,L2);
-        negate(&L2);
-        negate(&n3);
-        return n3;
-    }*/
-
-    if(compare(L1, L2) == 0){
+	if(compare(L1, L2) == 0){
 		n3 = multiply(L2,L1);
 		return n3;
 	}
-
+	
 	init(&one);
 	insert(&one, 1);
 
@@ -234,59 +195,21 @@ node *multiply(node *L1, node *L2){
 }
 
 node *divide(node *L1, node *L2){
-	node *temp, *one, *quotient, *zero;
-    init(&zero);
-    insert(&zero, 0);
-
+	node *temp, *one, *quotient;
 	init(&quotient);
 	insert(&quotient, 0);
 
 	removeZero(&L1);
 	removeZero(&L2);
 
-    //if L2 greater than L1
-	if(compare(L1, L2) == 0){
-		return zero;
-	}
-
 	//if L2 is equal to 0
-	if(compare(L2, zero) == -1){
+	if(compare(L2, quotient) == -1){
 		return NULL;
 	}
-    //if L1 is equal to 0
-	if(compare(L1, zero) == -1){
-		return zero;
+	//if L2 greater than L1
+	if(compare(L1, L2) == 0){
+		return quotient;
 	}
-
-/*
-    //both negative
-   if(compare(L1, zero) == 0 && compare(L2, zero) == 0){
-        negate(&L1);
-        negate(&L2);
-        quotient = divide(L1,L2);
-        negate(&L1);
-        negate(&L2);
-        return quotient;
-    }
-
-    //L1 negative
-    else if(compare(L1, zero) == 0){
-        negate(&L1);
-        quotient = divide(L1,L2);
-        negate(&L1);
-        negate(&quotient);
-        return quotient;
-    }
-
-    //L2 negative
-    else if(compare(L2, zero) == 0){
-        negate(&L2);
-        quotient = divide(L1,L2);
-        negate(&L2);
-        negate(&quotient);
-        return quotient;
-    }
-   */
 
 	init(&one);
 	insert(&one, 1);
@@ -306,10 +229,7 @@ node *divide(node *L1, node *L2){
 }
 
 node *mod(node *L1, node *L2){
-	node *temp, *one, *quotient, *zero;
-    init(&zero);
-    insert(&zero, 0);
-
+	node *temp, *one, *quotient;
 	init(&quotient);
 	insert(&quotient, 0);
 
@@ -322,7 +242,7 @@ node *mod(node *L1, node *L2){
 
 	//if L2 is greater than or equal to L1
 	if(compare(L1, L2) != 1)
-		return zero;
+		return quotient;
 	
 	init(&one);
 	insert(&one, 1);
@@ -344,10 +264,7 @@ node *mod(node *L1, node *L2){
 }
 
 node *power(node *L1, node *L2){
-	node *n3, *one, *count, *zero;
-    init(&zero);
-    insert(&zero, 0);
-    
+	node *n3, *one, *count;
 	init(&n3);
 	insert(&n3, 1);
 
@@ -367,31 +284,7 @@ node *power(node *L1, node *L2){
 	//if L1 is 0
 	if(compare(L1,count) == -1)
 		return one;
-    
-    //if L2 is negative
-    if(compare(L2,zero) == 0)
-        return NULL;
 
-    //if L1 is negative
-    if(compare(L1,zero) == 0){
-        //odd power
-        if(L2->data % 2 == 1){
-            negate(&L1);
-            n3 = power(L1,L2);
-            negate(&L1);
-
-            negate(&n3);
-            return n3;
-        }
-        else{
-            negate(&L1);
-            n3 = power(L1,L2);
-            negate(&L1);
-
-            return n3;
-        }
-
-    }
 	while(compare(L2, count) != -1){
 		n3 = multiply(n3, L1);
 		count = add(one, count);
@@ -419,7 +312,7 @@ int isOperator(char ch) {
 	return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%' || ch == '^');
 }
 
-node *operate(charstack **operator, nodestack **operand){
+node *operate(charstack* operator, nodestack* operand){
     node *n1, *n2, *n3;
     char op_temp;
 
@@ -431,7 +324,7 @@ node *operate(charstack **operator, nodestack **operand){
     op_temp = popchar(operator);
     popnode(operand, &n1);
 	popnode(operand, &n2);
-   
+
     switch(op_temp){
         case '+': n3 = add(n2, n1); break;
         case '-': n3 = subtract(n2, n1); break;
@@ -445,9 +338,10 @@ node *operate(charstack **operator, nodestack **operand){
 }
 
 void evaluate(char expr[], int s){
-	nodestack *operand;
-	charstack *operator;
+	nodestack operand;
+	charstack operator;
     node *result;
+	char c;
 	int n_op = 0; //number of operators
     int count = 0; 
     
@@ -460,55 +354,59 @@ void evaluate(char expr[], int s){
         if(isOperator(expr[i]))
             n_op ++;
     }
-    
-    node *num[n_op + 1]; //no of numbers = n_op + 1
+	
+    node *num[n_op + 1]; //no of numbers = op + 1
 	
 	//initialising numbers
 	for(int j =0; j <= n_op+1; j++)
 		init(&num[j]);
 
 	//inserting numbers in array
-	for(int i = 0; i < s; i++){
+	for(int i = 0; i <= s; i++){
 		if(isdigit(expr[i]))
 			insert(&num[count], expr[i] - '0');
-		else if(isOperator(expr[i]))
+		else
 			count ++;
 	}
 
 	count = 0;
+	
 	char temp;
 	for(int i = 0; i < s; i++){
-		if(isdigit(expr[i])){ 
+		c = expr[i];
+		if(isdigit(c)){ 
             //traverse till operator is reached
             while(isdigit(expr[i]))
                 i++;
 
             //now i is at operator
             i --;
-            //display(num[count]);
+
 			//push numbers onto the operand stack
-			pushnode(&operand, num[count++]);
-            
-			//count++;
+			pushnode(&operand, num[count]);
+			count++;
 		}		
-		else if(isOperator(expr[i])){
-            while(isEmptyChar(operator) == 0 && precedence(expr[i]) <= precedence(peek(operator))){
+        else if(c == '('){
+			pushchar(&operator, c);
+		}
+		else if(c == ')' ){
+			printf("%c\n", peek(&operator));
+			/*
+			while(peek(&operator) != '(' ){
+				
+				printf("%c\n", peek(&operator));
+				result = operate(&operator, &operand);
+				pushnode(&operand, result);
+			}
+			temp = popchar(&operator);
+			*/
+		}
+		else if(isOperator(c)){
+            while(isEmptyChar(operator) == 0 && precedence(c) <= precedence(peek(operator))){
                 result = operate(&operator, &operand);
 				pushnode(&operand, result);
             }
-            pushchar(&operator, expr[i]);
-		}
-        else if(expr[i] == '(')
-			pushchar(&operator, expr[i]);
-		
-		else if(expr[i] == ')' ){		
-			while(peek(operator) != '(' ){
-				result = operate(&operator, &operand);
-				pushnode(&operand, result);
-            
-			}
-			temp = popchar(&operator);
-			
+            pushchar(&operator, c);
 		}
 	}
 

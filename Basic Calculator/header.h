@@ -13,9 +13,10 @@ typedef struct charstack{
     struct charstack *next;
 } charstack;
 
-
+//bc headers
 void removeZero(node **);
 int compare(node *, node *);
+void negate(node **);
 node *add(node *, node *);
 node *subtract(node *, node *);
 node *multiply(node *, node *);
@@ -23,8 +24,9 @@ node *divide(node *, node *);
 void evaluate(char *, int);
 int precedence(char);
 int isOperator(char);
-node * operate(charstack*, nodestack* );
+node *operate(charstack*, nodestack* );
 
+//linked list headers
 void init(node **);
 void display(node *);
 void insert(node  **, int);
@@ -32,6 +34,7 @@ void append(node **, int);
 int count(node *L);
 void reverse(node **);
 
+//stack headers
 void initNodeStack(nodestack **);
 void displayNodeStack(nodestack *);
 void pushnode(nodestack **, node *);
