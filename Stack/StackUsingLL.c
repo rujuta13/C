@@ -7,7 +7,7 @@ typedef struct stack{
 } stack;
 
 void init(stack **head){
-	*head = (stack *) malloc(sizeof(stack *));
+	*head = (stack *) malloc(sizeof(stack));
 	if(*head == NULL)
 		return;
 

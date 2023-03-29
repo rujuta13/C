@@ -7,7 +7,7 @@ typedef struct node{
 } node;
 
 void init(node **head){
-	(*head) = (node *) malloc(sizeof(node *));
+	(*head) = (node *) malloc(sizeof(node));
 	if((*head) == NULL)
 		return;
 

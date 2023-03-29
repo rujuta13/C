@@ -20,7 +20,7 @@ void display(node *L){
 }
 void append(node **L, int key){
     node * nn;
-    nn = (node *)malloc(sizeof(node *));
+    nn = (node *)malloc(sizeof(node));
     if(!nn) //if nn is NULL then return
         return;
     
@@ -47,8 +47,8 @@ void append(node **L, int key){
 void main(){
     node *L1, *L2; //created 2 pointers of to node 
     //display(L1);
-    L1 = (node *)malloc(sizeof(node *));
-    L2 = (node *)malloc(sizeof(node *));
+    L1 = (node *)malloc(sizeof(node));
+    L2 = (node *)malloc(sizeof(node));
 
     L2 -> data = 2;
     L2 -> next = NULL;
@@ -59,7 +59,7 @@ void main(){
     printf("Linked List: ");
     display(L1);
 
-    append(&L1, 3);
+    append(&L1, 224967295);
 
     printf("Linked List (after appending): ");
     display(L1);

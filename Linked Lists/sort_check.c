@@ -38,8 +38,8 @@ int sort_check(List L){
 }
 void main(){
     List L1, L2; //created 2 pointers of to node 
-    L1 = (node *)malloc(sizeof(node *));
-    L2 = (node *)malloc(sizeof(node *));
+    L1 = (node *)malloc(sizeof(node));
+    L2 = (node *)malloc(sizeof(node));
     L2 -> data = 2;
     L2 -> next = NULL;
 

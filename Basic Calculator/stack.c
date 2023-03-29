@@ -18,7 +18,7 @@ typedef struct charstack{
 
 //Stacks using NODE * as data
 void initNodeStack(nodestack **head){
-	*head = (nodestack *) malloc(sizeof(nodestack *));
+	*head = (nodestack *) malloc(sizeof(nodestack));
 	if(*head == NULL)
 		return;
 
@@ -72,7 +72,7 @@ void popnode(nodestack **s, node **popped){
 
 //Stacks using CHAR as data
 void initCharStack(charstack **head){
-	*head = (charstack *) malloc(sizeof(charstack *));
+	*head = (charstack *) malloc(sizeof(charstack));
 	if(*head == NULL)
 		return;
 

@@ -13,23 +13,20 @@ void initBST(BST *t){
 	return;
 }
 
-void insert(BST *t, int key){
+node *insert(BST t, int key){
 	if(t == NULL){
-		node *nn = (node *)malloc(sizeof(node *));
-		*t = nn;
-		return;
+		node *nn = (node *)malloc(sizeof(node));
+		t = nn;
+		nn -> data = key;
+		nn->left = nn->right = NULL;
+		return t;
 	}
-	if(key == (*t)->data)
-		return;
-
-	if(key < (*t)->data){
-		if((*t)->left != NULL)
-			insert(&((*t)->left), key);
-	}
+	
+	if(key < t->data)
+		t->left = insert(t->left, key);
 	else
-		if((*t)->right != NULL)
-			insert(&((*t)->right), key);
-		
+		t->right = insert(t->right, key);
+	return t;
 }
 
 void inorder(BST t){
@@ -88,15 +85,16 @@ int height(BST t) {
 void main(){
 	BST t;
 	initBST(&t);
-	insert(&t, 8);
-	insert(&t, 3);
-	insert(&t, 1);
-	insert(&t, 6);
-	insert(&t, 4);
-	insert(&t, 7);
-	insert(&t, 10);
-	insert(&t, 14);
-	insert(&t, 13);
+	t = insert(t, 8);
+	t = insert(t, 3);
+
+	t = insert(t, 1);
+	t = insert(t, 6);
+	t = insert(t, 4);
+	t = insert(t, 7);
+	t = insert(t, 10);
+	t = insert(t, 14);
+	t = insert(t, 13);
 	
 	printf("Inorder:\n");
 	inorder(t);
