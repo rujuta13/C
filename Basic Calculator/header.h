@@ -39,7 +39,7 @@ void initNodeStack(nodestack **);
 void displayNodeStack(nodestack *);
 void pushnode(nodestack **, node *);
 int isEmptyNode(nodestack *);
-void popnode(nodestack **, node **);
+node *popnode(nodestack **);
 
 void initCharStack(charstack **);
 void displayCharStack(charstack *);

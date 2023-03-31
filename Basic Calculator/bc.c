@@ -429,8 +429,8 @@ node *operate(charstack **operator, nodestack **operand){
 	insert(&n3, 0);
 
     op_temp = popchar(operator);
-    popnode(operand, &n1);
-	popnode(operand, &n2);
+    n1 = popnode(operand);
+	n2 = popnode(operand);
    
     switch(op_temp){
         case '+': n3 = add(n2, n1); break;
@@ -517,7 +517,7 @@ void evaluate(char expr[], int s){
         pushnode(&operand, result);
 	}
 
-	popnode(&operand, &result);
+	result = popnode(&operand);
 	reverse(&result);
 	display(result);
 }

@@ -103,5 +103,4 @@ void main(){
 	
 	printf("\n Preorder:\n");
 	preorder(t);
-	
 }

@@ -57,17 +57,19 @@ int isEmptyNode(nodestack *s){
     return 0;
 }
 
-void popnode(nodestack **s, node **popped){
+node * popnode(nodestack **s){
     nodestack *temp = *s;
+    nodestack *popped;
     
     if(isEmptyNode(*s)){
-        (*popped) = NULL;
-        return;
+        popped = NULL;
+        return popped;
     }
 
     *s =  (*s) -> next;
-    (*popped) = temp->data;
+    popped = temp->data;
     free(temp);
+    return popped;
 }
 
 //Stacks using CHAR as data
