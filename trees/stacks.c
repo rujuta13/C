@@ -39,21 +39,6 @@ int isEmptyStack(stack *s){
     return 0;
 }
 
-/*
-void pop(stack **s, node **popped){
-    stack *temp = *s;
-    
-    if(isEmptyStack(*s)){
-        (*popped) = NULL;
-        return;
-    }
-
-    *s =  (*s) -> next;
-    (*popped) = temp->data;
-    free(temp);
-}
-*/
-
 node *pop(stack **s){
     stack *temp = *s;
     node *popped;
