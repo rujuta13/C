@@ -53,11 +53,11 @@ void insert(BST *t, int key){
 
 }
 
+
 void inorder(BST t){
 	stack *s;
 	initStack(&s);
 	node *p = t;
-
 	while(p || isEmptyStack(s) == 0){
 		if(p != NULL){ 
 			//push node as we print it later
@@ -71,27 +71,36 @@ void inorder(BST t){
 		}
 	}
 }
-/*
+
 void postorder(BST t){
 	stack *s;
 	initStack(&s);
 	node *p = t;
+	if(p == NULL)
+		return;
 
-	while(p){
-		if(p){ 
-			//push node as we print it later
+	do{
+		while(p){
+			if(p ->right) 
+				push(&s, p->right);
 			push(&s, p);
-			p = p->left;
-			if(p ->right != NULL) 
-				push(&s, p);
+			p = p->left;			
+		}
+		p = pop(&s);
+		if(p->right && peek(s) == p->right){
+			node *temp = pop(&s);
+			push(&s, p);
+			p = p->right;
 		}
 		else{
-			p = pop(&s);				
-			printf("%d ", p->data);		
+			printf("%d ", p->data);
+			p = NULL;
 		}
 	}
+	while(isEmptyStack(s) == 0);
+	
 }
-*/
+
 void preorder(BST t){
 	stack *s;
 	initStack(&s);

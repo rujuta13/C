@@ -2,6 +2,7 @@
     "files.associations": {
         "prime_no": "c",
         "*.tcc": "c",
-        "string": "c"
+        "string": "c",
+        "array": "c"
     }
 }

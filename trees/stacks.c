@@ -53,3 +53,9 @@ node *pop(stack **s){
     free(temp);
     return popped;
 }
+
+node *peek(stack *s){
+    if(s == NULL)
+        return NULL;
+    return s->data;
+}
