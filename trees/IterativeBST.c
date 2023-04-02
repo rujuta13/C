@@ -53,7 +53,6 @@ void insert(BST *t, int key){
 
 }
 
-
 void inorder(BST t){
 	stack *s;
 	initStack(&s);

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <limits.h>
 typedef struct node{
 	int data;
 	struct node *left, *right;
@@ -32,7 +32,7 @@ node *insert(BST t, int key){
 void inorder(BST t){
 	if(!t)	return;
 	inorder(t -> left);
-	printf("%d\t", t -> data);
+	printf("%d  ", t -> data);
 	inorder(t -> right);
 }
 
@@ -40,12 +40,12 @@ void postorder(BST t){
 	if(!t)	return;
 	postorder(t -> left);
 	postorder(t -> right);
-	printf("%d\t", t -> data);
+	printf("%d  ", t -> data);
 }
 
 void preorder(BST t){
 	if(!t)	return;
-	printf("%d\t", t -> data);
+	printf("%d  ", t -> data);
 	preorder(t -> left);
 	preorder(t -> right);
 }
@@ -82,6 +82,51 @@ int height(BST t) {
         return rHeight + 1;
 }
 
+void mirror(BST t){
+	if(t == NULL)
+		return;
+	
+	mirror(t->left);
+	mirror(t->right);
+	node *temp;
+	temp = t->left;
+	t->left = t->right;
+	t->right = temp;
+}
+
+void printDescendants(BST t, int key){
+	node *p = t; 
+	node *q = NULL;
+	
+	//if tree empty
+	if(t == NULL)
+		return;
+
+	while(p != NULL){
+		if(p -> data == key)
+			break;
+		q = p;
+		if(p ->data < key)
+			p = p -> right;
+		else
+			p = p -> left;
+	}
+	//p points to req. node
+	preorder(p);
+}
+int printAncestors(BST t, int key){
+	if(!t)
+		return 0;
+	if(t->data == key)
+		return 1;
+	//if in right or left subtree print
+	if(printAncestors(t->left, key) || printAncestors(t->right, key)){
+		printf("%d ", t->data);
+		return 1;
+	}
+	return 0;	
+}
+
 void main(){
 	BST t;
 	initBST(&t);
@@ -98,9 +143,20 @@ void main(){
 	
 	printf("Inorder:\n");
 	inorder(t);
-	printf("\n Postorder:\n");
+	printf("\nPostorder:\n");
 	postorder(t);
 	
-	printf("\n Preorder:\n");
+	printf("\nPreorder:\n");
 	preorder(t);
+/*
+	mirror(t);
+	printf("\nInorder after mirroring:\n");
+	inorder(t);
+*/
+	printf("\nAncestors\n");
+	int temp = printAncestors(t, 7);
+
+	printf("\nDescendants\n");
+	printDescendants(t, 6);
 }
+
