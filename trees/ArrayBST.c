@@ -76,8 +76,7 @@ void postorder(aBST t, int p){
     return;
 }
 
-int isComplete(aBST t)
-{
+int isComplete(aBST t){
 	int i;
 	int p = 1;
 	for (i = 0; i < t.s - 1; i++)
@@ -89,6 +88,16 @@ int isComplete(aBST t)
 	}
 	return p;
 }
+
+int countLeaf(aBST t){
+    
+}
+/*
+1. Height of the tree.
+2. Count of leaf nodes.
+3. Is Complete?
+4. Level order.
+*/
 
 void main(){
     aBST t;
@@ -110,4 +119,5 @@ void main(){
     printf("\nPostorder:\n");
     postorder(t, 0);    
     printf("\n");
+    printf("Leaf Nodes: %d\n");
 }
