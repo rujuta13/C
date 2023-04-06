@@ -112,8 +112,12 @@ void printDescendants(BST t, int key){
 			p = p -> left;
 	}
 	//p points to req. node
-	preorder(p);
+	if(p->left)
+		inorder(p->left);
+	if(p->right)
+		inorder(p->right);
 }
+
 int printAncestors(BST t, int key){
 	if(!t)
 		return 0;
@@ -157,6 +161,6 @@ void main(){
 	int temp = printAncestors(t, 7);
 
 	printf("\nDescendants\n");
-	printDescendants(t, 6);
+	printDescendants(t, 3);
 }
 
