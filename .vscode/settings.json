@@ -3,6 +3,9 @@
         "prime_no": "c",
         "*.tcc": "c",
         "string": "c",
-        "array": "c"
+        "array": "c",
+        "stdlib.h": "c",
+        "deque": "c",
+        "vector": "c"
     }
 }
