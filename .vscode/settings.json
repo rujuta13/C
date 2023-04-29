@@ -6,6 +6,7 @@
         "array": "c",
         "stdlib.h": "c",
         "deque": "c",
-        "vector": "c"
+        "vector": "c",
+        "heap.h": "c"
     }
 }

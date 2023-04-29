@@ -1,12 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX 100
-
-typedef struct heap{
-    int *A;
-    int s;
-    int last;
-}heap;
+#include "heap.h"
 
 void initHeap(heap *h){
     h->s = MAX;
@@ -18,6 +12,12 @@ void levelorder(heap h){
     for (int i = 0; i <= h.last; i++)
 		printf("%d ",h.A[i]);
     printf("\n");        
+}
+
+void swap(int *p1, int *p2){
+    int temp = *p2;
+    *p2 = *p1;
+    *p1 = temp;
 }
 
 void adjust_min(heap *h){
@@ -46,3 +46,42 @@ void insert(heap *h, int key){
    
 }
 
+void heapify(heap *h){
+    int i = 0;
+    int temp;
+    while(i < h->last){
+        //compare children
+        int c1 = 2*i + 1; //left
+        int c2 = 2*i + 2; //right
+        if(c1 >= h->last && c2 >= h->last)
+            break;
+        if(h->A[i] > h->A[c1] && h->A[i] > h->A[c2]){
+            if(h->A[c1] > h->A[c2]){
+                swap(&h->A[c1], &h->A[i]);
+                i = 2*i + 1;
+            }
+            else{
+                swap(&h->A[c2], &h->A[i]);
+                i = 2*i + 2;
+            }
+        }
+        if(h->A[i] > h->A[c1]){
+            swap(&h->A[c1], &h->A[i]);
+            i = 2*i + 1;
+        }
+        if(h->A[i] > h->A[c2]){
+            swap(&h->A[c2], &h->A[i]);
+            i = 2*i + 2;
+        }
+    }
+}
+
+void remove(heap *h){
+    //root is always deleted
+    if(h->last == 0){
+        h->last --;
+        return;
+    }
+    h->A[0] = h->A[h->last --]; //last element now root
+    heapify(h);
+}
