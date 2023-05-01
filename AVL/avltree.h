@@ -7,5 +7,5 @@ typedef struct node{
 typedef node * avl;
 
 void initAVL(avl *t);
-node *insert(avl t, int key);
-void adjustbf(avl t);
+void inorder(avl t);
+void insert(avl *t, int key);
