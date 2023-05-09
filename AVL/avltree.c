@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "avltree.h"
 
-void initAVL(avl *t){
+void initAVL(AVL *t){
     *t = NULL; 
 }
 
@@ -20,7 +20,7 @@ node * createNode(int key){
     return nn;
 }
 
-int height(avl t) {
+int height(AVL t) {
     //if tree empty or only root
 	if(t == NULL)
 		return -1;
@@ -38,19 +38,19 @@ int height(avl t) {
         return rHeight + 1;
 }
 
-void inorder(avl t){
+void traverse(AVL t){
 	if(!t)	return;
-	inorder(t -> left);
-	printf("key: %d  bf: %d\n", t -> data, t->bf);
-	inorder(t -> right);
+	traverse(t -> left);
+    if(t->parent)
+	    printf("name: %d  parent: %d  bf: %d\n", t -> data, t->parent->data, t->bf);
+    else
+        printf("name: %d  parent: NULL  bf: %d\n", t -> data, t->bf);
+	traverse(t -> right);
 }
 
-void adjustBF(avl *t){
-    //newly added node is passed as arg
+void updateBF(AVL *t){
+    //newly added node's parent is passed as arg
     node *p = *t;
-
-    //we do not need to adjust BF of the new node
-    p = p->parent;
 
     while(p){
         p->bf = height(p->left) - height(p->right);
@@ -58,7 +58,14 @@ void adjustBF(avl *t){
     }
 }
 
-node * getImbalance(avl *t){
+AVL updateBFtree(AVL t){
+    if(!t)	return NULL;
+	updateBFtree(t -> left);
+    t->bf = height(t->left) - height(t->right);
+	updateBFtree(t -> right);
+}
+
+node * getImbalance(node **t){
     node *p = *t;
     node *im;
     //find imbalanced node
@@ -72,7 +79,7 @@ node * getImbalance(avl *t){
     return NULL;
 }
 
-void LLrotate(avl *t, node *im){
+void LLrotate(AVL *t, node *im){
     //imbalanced node is given as one parameter
     node *A = im;
     node *B = A -> left;
@@ -96,12 +103,12 @@ void LLrotate(avl *t, node *im){
     if(Br)
         Br->parent = A;
 
-    A->bf = 0;
-    B->bf = 0;
+    updateBF(&A);
+    updateBF(&B);
     return;
 }
 
-void RRrotate(avl *t, node *im){
+void RRrotate(AVL *t, node *im){
     //imbalanced node is given as one parameter
     node *A = im;
     node *B = A -> right;
@@ -128,50 +135,50 @@ void RRrotate(avl *t, node *im){
     A->right = Bl;
     if(Bl)
         Bl->parent = A;
-
-    A->bf = 0;
-    B->bf = 0;
+ 
+    updateBF(&A);
+    updateBF(&B);
     return;
 }
 
-void LRrotate(avl *t, node *im){
+void LRrotate(AVL *t, node *im){
     RRrotate(t, im->left);
     LLrotate(t, im);
 }
 
-void RLrotate(avl *t, node *im){
+void RLrotate(AVL *t, node *im){
     LLrotate(t, im->right);
     RRrotate(t, im);
 }
 
-void balanceTree(avl *t, node **nn){
-    //update BF's
-    adjustBF(nn);
-
+void balanceTree(AVL *t, node *nn){
     node *im; //imbalanced node
-    im = getImbalance(t);
+    im = getImbalance(nn);
     
+    //no imbalance
     if(!im)
         return;
     
     //imbalance is there
-    printf("Imbalanced node: %d\n", im->data);
+    //printf("Imbalanced node: %d\n", im->data);
+
     //left imbalance
     if(im->bf == 2){
-        if((*nn)->data < im->left->data)
+        if(nn->data < im->left->data)
             LLrotate(t, im);
         else
             LRrotate(t,im);
     }
+    //right imbalance
     else if(im->bf == -2){
-        if((*nn)->data < im->right->data)
+        if(nn->data < im->right->data)
             RLrotate(t,im);
         else
             RRrotate(t, im);
     }
 }
 
-void insert(avl *t, int key){
+void insertNode(AVL *t, int key){
 	node *nn;
     nn = createNode(key);
 	
@@ -205,7 +212,106 @@ void insert(avl *t, int key){
 		q -> right = nn;
     //node now inserted
 
+    //update BF's
+    updateBF(&(nn->parent));
+
     // we now adjust the imbalances
-    balanceTree(t, &nn);
+    balanceTree(t, nn);
+	return;
+}
+
+int inorderPre(AVL t, node *p){
+	p = p-> left;
+
+	if(p->right == NULL)
+		return p->data;
+
+	while(p->right != NULL){
+		p = p->right;
+	}
+	return p->data;
+}
+
+void removeNode(AVL *t, int key){
+	node *p = *t; 
+	//node *q = NULL;
+	
+	//if tree empty
+	if(*t == NULL)
+		return;
+
+    //searching for key in the tree
+	while(p != NULL){
+		if(p -> data == key)
+			break;
+		//q = p;
+		if(p ->data < key)
+			p = p -> right;
+		else
+			p = p -> left;
+	}
+	//p points to node to be deleted
+	//q is parent of p
+
+	//key not present in tree
+	if(p == NULL)
+		return;	
+
+	//leaf node
+	if(p->left == NULL && p->right == NULL){
+		//p is root node and the only node
+		if(p->parent == NULL){
+			*t = NULL;
+			free(p);
+			return;
+		}
+		if(p->data < p->parent->data) //p == parent->left
+			p->parent -> left = NULL;
+		else
+			p->parent -> right = NULL; //p == parent->right
+		free(p);
+		return;
+	}
+
+	//one child on the left
+	if(p->left != NULL && p->right == NULL){
+        if(p->parent == NULL){//root
+            *t = p->left;
+            p->left->parent = NULL;
+        }
+		else if(p->left->data < p->parent->data){
+			p->parent -> left = p ->left;
+            p->left->parent = p->parent;
+        }
+		else{
+			p->parent -> right = p -> left;
+            p->left->parent = p->parent;
+        }
+		free(p);
+		return;
+	}
+
+	//one child on the right
+	if(p->left == NULL && p->right != NULL){
+        if(p->parent == NULL){//root
+            *t = p->right;
+            p->right->parent = NULL;
+        }
+		else if(p->right->data < p->parent->data){
+			p->parent -> left = p ->right;
+            p ->right->parent = p->parent;
+        }
+		else{
+			p->parent->right = p -> right;
+            p->right->parent = p->parent;
+        }
+		free(p);
+		return;
+	}
+
+	//two children	
+	int inP = inorderPre(*t, p);
+	p->data = inP;
+	removeNode(&(p->left), inP);
 	return;
 }

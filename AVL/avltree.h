@@ -4,8 +4,10 @@ typedef struct node{
     int bf;
 }node;
 
-typedef node * avl;
+typedef node * AVL;
 
-void initAVL(avl *t);
-void inorder(avl t);
-void insert(avl *t, int key);
+void initAVL(AVL *t);
+void traverse(AVL t);
+void insertNode(AVL *t, int key);
+void removeNode(AVL *t, int key);
+//void destroyTree(AVL t);

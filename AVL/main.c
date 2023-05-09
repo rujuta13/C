@@ -3,11 +3,10 @@
 #include "avltree.h"
 
 void main(){
-    avl t;
+    AVL t;
 	initAVL(&t);
-	insert(&t, 10);
-	insert(&t, 30);
-	insert(&t, 20);
-	
-	inorder(t);
+	insertNode(&t, 10);	
+	insertNode(&t, 30);
+	insertNode(&t, 20);
+	traverse(t);
 }

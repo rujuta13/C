@@ -31,8 +31,6 @@ int search(BST t, int key){
 }
 
 int inorderPre(BST t, node *p){
-	p = p-> left;
-
 	if(p->right == NULL)
 		return p->data;
 
@@ -84,7 +82,10 @@ void delete(BST *t, int key){
 
 	//one child on the left
 	if(p->left != NULL && p->right == NULL){
-		if(p->left->data < q->data)
+		if(q == NULL){//root node
+			*t = p->left;
+		}
+		else if(p->left->data < q->data)
 			q -> left = p ->left;
 		else
 			q -> right = p -> left;
@@ -94,7 +95,10 @@ void delete(BST *t, int key){
 
 	//one child on the right
 	if(p->left == NULL && p->right != NULL){
-		if(p->right->data < q->data)
+		if(q == NULL){//root node
+			*t = p->right;
+		}
+		else if(p->right->data < q->data)
 			q->left = p ->right;
 		else
 			q->right = p->right;
@@ -103,10 +107,8 @@ void delete(BST *t, int key){
 	}
 
 	//two children	
-	int inP = inorderPre(*t, p);
+	int inP = inorderPre(*t, p->left);
 	p->data = inP;
 	delete(&(p->left), inP);
 	return;
-
-	//delete
 }
