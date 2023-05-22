@@ -1,4 +1,5 @@
 #include "header.h"
+#include "helper.h"
 
 void initGraph(graph *g, char *filename){
     FILE *fp = fopen(filename, "r");
@@ -12,4 +13,19 @@ void initGraph(graph *g, char *filename){
             fscanf(fp, "%d", &g->A[i][j]);
         }
     }
+}
+
+void BFS(graph g, int start){
+    queue q;
+    initQ(&q);
+    enqueue(&q, 1);
+    enqueue(&q, 1);
+    enqueue(&q, 1);
+    enqueue(&q, 1);
+    displayQ(q);
+    printf("%d\n",dequeue(&q));  
+    printf("%d\n",dequeue(&q));  
+    printf("%d\n",dequeue(&q));
+    printf("%d\n",dequeue(&q));
+    printf("%d\n",dequeue(&q));
 }

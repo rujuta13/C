@@ -7,6 +7,7 @@
         "stdlib.h": "c",
         "deque": "c",
         "vector": "c",
-        "heap.h": "c"
+        "heap.h": "c",
+        "limits.h": "c"
     }
 }
