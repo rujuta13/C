@@ -58,13 +58,6 @@ void updateBF(AVL *t){
     }
 }
 
-AVL updateBFtree(AVL t){
-    if(!t)	return NULL;
-	updateBFtree(t -> left);
-    t->bf = height(t->left) - height(t->right);
-	updateBFtree(t -> right);
-}
-
 node * getImbalance(node **t){
     node *p = *t;
     node *im;
@@ -151,9 +144,9 @@ void RLrotate(AVL *t, node *im){
     RRrotate(t, im);
 }
 
-void balanceTree(AVL *t, node *nn){
+void balanceInsert(AVL *t, node *nn){
     node *im; //imbalanced node
-    im = getImbalance(nn);
+    im = getImbalance(&nn);
     
     //no imbalance
     if(!im)
@@ -216,7 +209,7 @@ void insertNode(AVL *t, int key){
     updateBF(&(nn->parent));
 
     // we now adjust the imbalances
-    balanceTree(t, nn);
+    balanceInsert(t, nn);
 	return;
 }
 
@@ -232,86 +225,102 @@ int inorderPre(AVL t, node *p){
 	return p->data;
 }
 
-void removeNode(AVL *t, int key){
-	node *p = *t; 
-	//node *q = NULL;
-	
-	//if tree empty
-	if(*t == NULL)
-		return;
+void balanceDelete(AVL *t, node *nn){
+    node *im; //imbalanced node
+    im = getImbalance(&nn);
+    
+    //no imbalance
+    if(!im)
+        return;
 
-    //searching for key in the tree
-	while(p != NULL){
-		if(p -> data == key)
+    if(im -> bf == 2){//left
+        if(im->left->bf == -1)
+            LRrotate(t, im);
+        else //Case 0, 1
+            LLrotate(t, im);
+    }
+    else{//right
+        if(im->right->bf == 1)
+            RLrotate(t, im);
+        else //Case 0, 1
+            RRrotate(t, im);
+    }
+}
+
+node * removeNode(AVL *t, int key){
+    //tree empty
+    if(*t == NULL)
+		return *t;
+
+    node *p = *t;
+    node *temp;
+    while (p) {
+        if(key == p->data)
 			break;
-		//q = p;
-		if(p ->data < key)
-			p = p -> right;
-		else
-			p = p -> left;
-	}
-	//p points to node to be deleted
-	//q is parent of p
+        if (key < p->data)
+            p = p->left;
+        else 
+            p = p->right;
+    }
+    //now p points to node to be deleted
 
-	//key not present in tree
-	if(p == NULL)
-		return;	
+    if (!p) //element not in the tree
+        return *t;
 
-	//leaf node
-	if(p->left == NULL && p->right == NULL){
-		//p is root node and the only node
-		if(p->parent == NULL){
-			*t = NULL;
-			free(p);
-			return;
-		}
-		if(p->data < p->parent->data) //p == parent->left
-			p->parent -> left = NULL;
-		else
-			p->parent -> right = NULL; //p == parent->right
-		free(p);
-		return;
-	}
+    //leaf node
+    if (!p->left && !p->right){
+        //p is root node and the only node
+        if (p == *t)
+            *t = NULL;
+        else {
+            if (p->parent->left == p) //p is left child
+                p->parent->left = NULL;
+            else //p is the right child
+                p->parent->right = NULL;
+            updateBF(&p->parent);
+            balanceDelete(t, p->parent);
+        }
+        free(p);
+        return *t;
+    }
 
-	//one child on the left
-	if(p->left != NULL && p->right == NULL){
-        if(p->parent == NULL){//root
+    //one child (left)
+    else if(p->left && !p->right){
+        if(p->parent == NULL)//root 
             *t = p->left;
-            p->left->parent = NULL;
-        }
-		else if(p->left->data < p->parent->data){
-			p->parent -> left = p ->left;
-            p->left->parent = p->parent;
-        }
-		else{
-			p->parent -> right = p -> left;
-            p->left->parent = p->parent;
-        }
-		free(p);
-		return;
-	}
-
-	//one child on the right
-	if(p->left == NULL && p->right != NULL){
-        if(p->parent == NULL){//root
+        else if (p->parent->left == p)
+            p->parent->left = p->left;
+        else
+            p->parent->right = p->left;
+        
+        p->left->parent = p->parent;
+        updateBF(&p->left->parent);
+        balanceDelete(t, p->left->parent);  
+        
+        free(p);
+        return *t;
+    } 
+    //one child (right)
+    else if (!p->left && p->right){
+        if(p->parent == NULL)//root 
             *t = p->right;
-            p->right->parent = NULL;
-        }
-		else if(p->right->data < p->parent->data){
-			p->parent -> left = p ->right;
-            p ->right->parent = p->parent;
-        }
-		else{
-			p->parent->right = p -> right;
-            p->right->parent = p->parent;
-        }
-		free(p);
-		return;
-	}
+        else if (p->parent->left == p) //current node is left child
+            p->parent->left = p->right;
+        else
+            p->parent->right = p->right;
+        p->right->parent = p->parent;
+        
+        updateBF(&p->right->parent);
+        balanceDelete(t, p->right->parent);  
+        free(p);
+        return *t;
+    }
 
-	//two children	
-	int inP = inorderPre(*t, p);
-	p->data = inP;
-	removeNode(&(p->left), inP);
-	return;
+    //two children
+    else {
+        int inP = inorderPre(*t, p);
+        p->data = inP;
+        p->left = removeNode(&(p->left), inP);
+    }
+    return *t;
 }

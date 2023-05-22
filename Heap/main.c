@@ -4,16 +4,19 @@
 
 void main(){
     heap h;
-    initHeap(&h,10);
+    initHeap(&h, 10);
+
+    //type = 0 for maxheap
+    //type = 1 for minheap
+
+    int type = 0; 
     
-    insert(&h,15);
-    insert(&h, 12);
-    insert(&h, 10);
-    insert(&h, 6);
-    insert(&h, 7);
-    
-    insert(&h, 5);
+    insert(&h, 12, type);
+    insert(&h, 7, type);
+    insert(&h, 10, type);
+    insert(&h, 6, type);
+    insert(&h, 5, type);
+    insert(&h, 15, type);
     display(h);
-    printf("Deleted element is: %d\n",delete(&h));
-    display(h);
+    HeapSort(&h,type);
 }
