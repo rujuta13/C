@@ -6,7 +6,7 @@ typedef struct stack{
     struct stack * next;
 } stack;
 
-void init(stack **head){
+void initS(stack **head){
 	*head = (stack *) malloc(sizeof(stack));
 	if(*head == NULL)
 		return;
@@ -14,7 +14,7 @@ void init(stack **head){
 	*head = NULL;
 }
 
-void display(stack *s){
+void displayS(stack *s){
     stack * p;
     p = s;
     printf("[");
@@ -49,7 +49,7 @@ int isEmpty(stack *s){
 int pop(stack **s){
     stack *temp = *s;
     int popped;
-    if(isEmpty(*s)){
+    if(isEmptyS(*s)){
         printf("Stack empty\n");
         return INT_MIN;
     }
@@ -64,18 +64,18 @@ int pop(stack **s){
 void main(){
     //stack *s =NULL;
     stack *s;
-    init(&s);
+    initS(&s);
     push(&s, 1); 
     push(&s, 2);
     push(&s, 3);
-    display(s);
+    displayS(s);
     printf("Popped %d\n", pop(&s));
     push(&s, 4);
-    display(s);
+    displayS(s);
     printf("Popped %d\n", pop(&s));
     printf("Popped %d\n", pop(&s));
     printf("Popped %d\n", pop(&s));
-    display(s);
+    displayS(s);
     printf("Popped %d\n", pop(&s));
     
 }

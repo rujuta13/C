@@ -34,14 +34,14 @@ void enqueue(queue *q, int key){
     q->rear = nn;
 }
 
-int isEmpty(queue q){
+int isEmptyQ(queue q){
     if(q.front == NULL)
     	return 1;
     return 0;
 }
 
 int dequeue(queue *q){
-    if(isEmpty(*q))
+    if(isEmptyQ(*q))
         return INT_MIN;
 
     node *temp = q-> front;

@@ -23,15 +23,17 @@ void BFS(graph g, int start){
 	enqueue(&q, start);
 	visited[start] = 1;
 	int v;
-	while(!isEmpty(q)){
+	while(!isEmptyQ(q)){
 		v = dequeue(&q);
 		printf("%d ", v);
 		
 		for(int i = 0; i<g.n; i++){
-			if(g.A[v][i] && visited[i]!=1){
+			if(g.A[v][i] && visited[i]==0){
 				enqueue(&q, i);
 				visited[i]=1;
 			}
 		}
 	}
 }
+
+void DFS()
