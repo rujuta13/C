@@ -1,4 +1,4 @@
-#include "header.h"
+#include "graphMatrix.h"
 #include "queue.h"
 
 void initGraph(graph *g, char *filename){
@@ -36,4 +36,4 @@ void BFS(graph g, int start){
 	}
 }
 
-void DFS()
+//void DFS()
