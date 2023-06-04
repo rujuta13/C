@@ -9,3 +9,4 @@ typedef struct graph{
 void initGraph(graph *g, char *filename);
 void display(graph g);
 void BFS(graph g, int start);
+void DFS(graph g, int start);

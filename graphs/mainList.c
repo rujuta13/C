@@ -3,5 +3,9 @@
 void main(int s, char* A[]){
     graph g;
     initGraph(&g, A[1]);
-    displayGraph(g);
+    //displayGraph(g);
+
+    //BFS from each start node
+    for(int i = 0; i<g.n; i++)
+        BFS(g, i);
 }

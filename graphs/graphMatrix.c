@@ -1,5 +1,6 @@
 #include "graphMatrix.h"
-#include "queue.h"
+//#include "queue.h"
+#include "stack.h"
 
 void initGraph(graph *g, char *filename){
     FILE *fp = fopen(filename, "r");
@@ -14,7 +15,7 @@ void initGraph(graph *g, char *filename){
         }
     }
 }
-
+/*
 void BFS(graph g, int start){
     queue q;
     initQ(&q);
@@ -35,5 +36,24 @@ void BFS(graph g, int start){
 		}
 	}
 }
+*/
+void DFS(graph g, int start) {
+    stack *s;
+    initS(&s);
+    int *visited = (int *)calloc(g.n, sizeof(int));
 
-//void DFS()
+    visited[start] = 1;
+    push(&s, start);
+	int v, i;
+    while (!isEmptyS(s)) {
+        v = pop(&s);
+        printf("%d ", v);
+
+        for (i = 0; i < g.n; i++) {
+            if (g.A[v][i] && visited[i] == 0) {
+                visited[i] = 1;
+                push(&s, i);
+            }
+        }
+    }
+}

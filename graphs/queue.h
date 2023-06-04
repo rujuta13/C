@@ -13,4 +13,4 @@ typedef struct queue {
 void initQ(queue *q);
 void enqueue(queue *q, int key);
 int dequeue(queue *q);
-int isEmpty(queue q);
+int isEmptyQ(queue q);

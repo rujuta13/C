@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node{
+typedef struct graphNode{
     int vertex;
     int weight;
-    struct node *next;
-}node;
+    struct graphNode *next;
+}graphNode;
 
 
 typedef struct graph{ 
     int n;
-    node** adjList;
+    graphNode** adjList;
 }graph;
 
 void initGraph(graph *g, char *filename);
 void displayGraph(graph g);
+void BFS(graph g, int start);

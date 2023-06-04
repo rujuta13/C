@@ -1,7 +1,8 @@
 #include "graphList.h"
+#include "queue.h"
 
-node * createNode(int vertex, int weight){
-    node *nn = (node *)malloc(sizeof(node));
+graphNode * createNode(int vertex, int weight){
+    graphNode *nn = (graphNode *)malloc(sizeof(graphNode));
     if(!nn)
         return NULL;
 
@@ -17,7 +18,7 @@ void initGraph(graph *g, char *filename){
         return;
 
     fscanf(fp, "%d", &g->n);
-    g->adjList = (node **)malloc(g->n * sizeof(node *));
+    g->adjList = (graphNode **)malloc(g->n * sizeof(graphNode *));
     if(!g->adjList)
         return;
 
@@ -26,7 +27,7 @@ void initGraph(graph *g, char *filename){
         g->adjList[i]= NULL;
     
     int w;
-    node *nn;
+    graphNode *nn;
     for(int i =0; i < g->n ; i++){
         //printf("%d:  ",i);
         for(int j = 0; j < g->n; j++){
@@ -51,7 +52,7 @@ void initGraph(graph *g, char *filename){
 }
 
 void displayGraph(graph g){
-    node *p;
+    graphNode *p;
     for(int i = 0; i < g.n; i++){
         printf("%d:  ",i); //start vertex
         p = g.adjList[i];
@@ -61,4 +62,36 @@ void displayGraph(graph g){
         }
         printf("\n");
     }
+}
+
+void BFS(graph g, int start) {
+    int* visited = (int*)malloc(g.n * sizeof(int));
+    if(!visited)
+        return;
+
+    for (int i = 0; i < g.n; ++i)
+        visited[i] = 0;
+
+    queue q;
+    initQ(&q);
+    visited[start] = 1;
+    enqueue(&q, start);
+
+    while (!isEmptyQ(q)) {
+        int v = dequeue(&q);
+        printf("%d ", v);
+
+        graphNode *p; 
+        p = g.adjList[v];
+        while (p != NULL) {
+            int adjVertex = p->vertex;
+            if (!visited[adjVertex]) {
+                visited[adjVertex] = 1;
+                enqueue(&q, adjVertex);
+            }
+            p = p->next;
+        }
+    }
+    printf("\n");
+    free(visited);
 }
