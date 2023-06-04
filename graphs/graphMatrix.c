@@ -1,5 +1,5 @@
 #include "graphMatrix.h"
-//#include "queue.h"
+#include "queue.h"
 #include "stack.h"
 
 void initGraph(graph *g, char *filename){
@@ -15,7 +15,7 @@ void initGraph(graph *g, char *filename){
         }
     }
 }
-/*
+
 void BFS(graph g, int start){
     queue q;
     initQ(&q);
@@ -36,7 +36,7 @@ void BFS(graph g, int start){
 		}
 	}
 }
-*/
+
 void DFS(graph g, int start) {
     stack *s;
     initS(&s);
