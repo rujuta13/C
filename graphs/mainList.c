@@ -5,7 +5,17 @@ void main(int s, char* A[]){
     initGraph(&g, A[1]);
     //displayGraph(g);
 
-    //BFS from each start node
-    for(int i = 0; i<g.n; i++)
+    printf("BFS\n");
+    for(int i = 0; i<g.n; i++){
+    	printf("Start=%d: ",i);
         BFS(g, i);
+    }
+        
+    printf("\nDFS\n");
+    for(int i = 0; i<g.n; i++){
+    	printf("Start=%d: ",i);
+        DFS(g, i);
+    }
+     
+	Kruskal(g);
 }
