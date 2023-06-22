@@ -1,24 +1,6 @@
-#include <stdio.h>
-#include <string.h>
-#include<stdlib.h>
-#include <ctype.h>
 #include "header.h"
-
-typedef struct node{
-    int data;
-    struct node * next;
-} node;
-
-typedef struct nodestack{
-    node *data;
-    struct nodestack *next;
-} nodestack;
-
-typedef struct charstack{
-    char data;
-    struct charstack *next;
-} charstack;
-
+#include <string.h>
+#include <ctype.h>
 
 void removeZero(node **L) {
 	reverse(L);

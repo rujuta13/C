@@ -1,11 +1,4 @@
-#include<stdio.h>
-#include<stdlib.h>
-
-typedef struct node{
-    int data;
-    struct node *next;
-} node;
-
+#include "header.h"
 void init(node **head){
 	(*head) = (node *) malloc(sizeof(node));
 	if((*head) == NULL)

@@ -1,20 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct node{
-    int data;
-    struct node *next;
-} node;
-
-typedef struct nodestack{
-    node *data;
-    struct nodestack *next;
-} nodestack;
-
-typedef struct charstack{
-    char data;
-    struct charstack *next;
-} charstack;
+#include "header.h"
 
 //Stacks using NODE * as data
 void initNodeStack(nodestack **head){

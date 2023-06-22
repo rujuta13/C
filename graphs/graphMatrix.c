@@ -57,3 +57,44 @@ void DFS(graph g, int start) {
         }
     }
 }
+
+int* dijkstras(graph g, int start){
+  int *cost= (int *)malloc(sizeof(int) * g.n);
+  if(!cost)
+    return NULL;
+
+  int *visited = (int *)calloc(g.n, sizeof(int));
+  if(!visited){
+    free(cost);
+    return NULL;
+  }  
+  for(int i = 0; i < g.n; i++){
+    if(g.A[start][i])
+      cost[i] = g.A[start][i];
+    else
+      cost[i] = INT_MAX;
+  }
+  
+  visited[start] = 1;
+  int mini, min;
+  
+  for(int i = 0; i < g.n; i++){
+    min = INT_MAX;
+    for(int j = 0; j < g.n; j++){
+      if(visited[j] == 0 && cost[j] < min){
+        min = cost[j];
+        mini = j;
+      }
+    }
+    visited[mini] = 1;
+
+    //relaxation
+    for(int j = 0; j < g.n; j++){
+      if(!visited[j]){
+        if(cost[j] > min + g.A[mini][j])
+          cost[j] = min + g.A[mini][j];
+      }
+    }
+  }
+  return cost;
+}

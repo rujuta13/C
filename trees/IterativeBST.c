@@ -78,6 +78,7 @@ void postorder(BST t){
 	if(p == NULL)
 		return;
 
+	node *temp;
 	do{
 		while(p){
 			if(p ->right) 
@@ -87,7 +88,7 @@ void postorder(BST t){
 		}
 		p = pop(&s);
 		if(p->right && peek(s) == p->right){
-			node *temp = pop(&s);
+			temp = pop(&s);
 			push(&s, p);
 			p = p->right;
 		}

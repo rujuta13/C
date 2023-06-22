@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 typedef struct node{
     int data;
     struct node *next;
@@ -24,7 +26,7 @@ node *divide(node *, node *);
 void evaluate(char *, int);
 int precedence(char);
 int isOperator(char);
-node *operate(charstack*, nodestack* );
+node *operate(charstack **operator, nodestack **operand);
 
 //linked list headers
 void init(node **);
@@ -44,6 +46,6 @@ node *popnode(nodestack **);
 void initCharStack(charstack **);
 void displayCharStack(charstack *);
 void pushchar(charstack **, char);
-node *popchar(charstack **);
+char popchar(charstack **);
 int isEmptyChar(charstack *);
 char peek(charstack *);
