@@ -1,6 +1,6 @@
 #include "graphList.h"
 #include "queue.h"
-#include "stack.h"
+
 graphNode * createNode(int vertex, int weight){
     graphNode *nn = (graphNode *)malloc(sizeof(graphNode));
     if(!nn)
@@ -65,29 +65,57 @@ void displayGraph(graph g){
 }
 
 void BFS(graph g, int start) {
-    int* visited = (int*)malloc(g.n * sizeof(int));
+    int *visited = (int *)calloc(g.n, sizeof(int));
     if(!visited)
         return;
-
-    for (int i = 0; i < g.n; ++i)
-        visited[i] = 0;
 
     queue q;
     initQ(&q);
     visited[start] = 1;
     enqueue(&q, start);
-
+	int v, adjV;
     while (!isEmptyQ(q)) {
-        int v = dequeue(&q);
+        v = dequeue(&q);
         printf("%d ", v);
 
         graphNode *p; 
         p = g.adjList[v];
-        while (p != NULL) {
-            int adjVertex = p->vertex;
-            if (!visited[adjVertex]) {
-                visited[adjVertex] = 1;
-                enqueue(&q, adjVertex);
+        while (p) {
+            adjV = p->vertex;
+            if (!visited[adjV]) {
+                visited[adjV] = 1;
+                enqueue(&q, adjV);
+            }
+            p = p->next;
+        }
+    }
+    printf("\n");
+    free(visited);
+}
+
+
+void DFS(graph g, int start) {
+    int *visited = (int *)calloc(g.n, sizeof(int));
+    if(!visited)
+    	return;
+	
+    stack *s;
+    initS(&s);
+    visited[start] = 1;
+    push(&s, start);
+	int v, adjV;
+	
+    while (!isEmptyS(s)) {
+        v = pop(&s);
+        printf("%d ", v);
+        
+		graphNode *p; 
+        p = g.adjList[v];
+        while (p) {
+            adjV = p->vertex;
+            if (!visited[adjV]) {
+                visited[adjV] = 1;
+                push(&s, adjV);
             }
             p = p->next;
         }
