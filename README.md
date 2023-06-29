@@ -1,2 +1,2 @@
 # C
-Data Structures and Algorithms coursework in C
+Data Structures and Algorithms SY coursework in C
